@@ -1,0 +1,46 @@
+/* display flex helpers */
+.FRow {
+    display: flex;
+}
+
+.FCol {
+    display: flex;
+    flex-direction: column;
+}
+
+.FCenter {
+    align-items: center;
+    justify-content: center;
+}
+
+.FJ_center {
+    justify-content: center;
+}
+
+.FJ_around {
+    justify-content: space-around;
+}
+
+.FJ_between {
+    justify-content: space-between;
+}
+
+.FJ_left {
+    justify-content: flex-start;
+}
+
+.FJ_right {
+    justify-content: flex-end;
+}
+
+.FA_center {
+    align-items: center;
+}
+
+.FA_start {
+    align-items: flex-start;
+}
+
+.FA_end {
+    align-items: flex-end;
+}
