@@ -36,5 +36,3 @@ export const load = async ({
 
     return LEV
 }
-
-console.log(await load({ helper: ["dom"] }))
