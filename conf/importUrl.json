@@ -1,0 +1,7 @@
+{
+    "helpers": {
+        "dom": "./../helper/dom.js",
+        "tempo": "./../helper/tempo.js",
+        "utility": "./../helper/utility.js"
+    }
+}
