@@ -1,6 +1,6 @@
-const urlJSON = "../conf/importUrl.json"
+const urlJSON = new URL("../conf/importUrl.json", import.meta.url).href
 
-export const init = async ({
+export const load = async ({
     helper = null,
     style = null
 } = {}) => {
@@ -19,16 +19,17 @@ export const init = async ({
     }
 
     if (failed.length) {
-        console.info(`LEV init: check parametres\n${failed}`)
+        console.info(`LEV load: check parametres\n${failed}`)
         return null
-    } 
+    }
 
     await Promise.all(
         Object.entries(LEV).map(([section, obj]) => {
             return Promise.all(
-                Object.entries(obj).map(([name, url]) =>
-                    import(url).then(module => LEV[section][name] = module)
-                )
+                Object.entries(obj).map(([name, url]) => {
+                    const serverUrl = new URL(url, import.meta.url).href
+                    return import(serverUrl).then(module => LEV[section][name] = module)
+                })
             )
         })
     )
@@ -36,7 +37,4 @@ export const init = async ({
     return LEV
 }
 
-console.log(await init({
-    helper: ["dom", "tempo"]
-})
-)
+console.log(await load({ helper: ["dom"] }))
