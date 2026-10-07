@@ -38,7 +38,6 @@ export class TextAppear extends HTMLElement {
                 display: flex;
                 width: auto;
                 height: auto;
-                border: 1px solid blue;
 
                 .charBox {
                     display: flex;
@@ -122,10 +121,6 @@ export class TextAppear extends HTMLElement {
     init() {
         const boxes = this.#createBoxes()
         this.#animate(boxes)
-    }
-
-    connectedCallback() {
-        this.init()
     }
 }
 
