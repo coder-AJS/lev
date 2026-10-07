@@ -1,11 +1,11 @@
-import {reactive} from "./helpers/reactive.js"
+import { newReactive } from "./helpers/reactive.js"
 
 const fn1 = () => {
-    console.log(1, reactObj.scroll)
+    console.log(1, obj.scroll)
 }
 
 const fn2 = () => {
-    console.log(2, reactObj.other)
+    console.log(2, obj.other)
 }
 
 const fn3 = () => {
@@ -16,28 +16,32 @@ const fn4 = () => {
     console.log(4)
 }
 
-const reactObj = reactive({scroll: 0}, fn1)
-reactObj.addTo("scroll", fn2)
-reactObj.add({other: 100})
-reactObj.addTo("other", [fn3, fn4])
+const obj = newReactive()
+obj.add({
+    name: "scroll",
+    value: window.scrollY,
+    listeners: fn1
+})
+console.log(obj)
 
+obj.add({
+    name: "other",
+    value: 0
+})
+obj.addTo({
+    name: "scroll",
+    listeners: fn2
+})
 
+console.log(obj.getProps())
+console.log(obj.getListeners())
 
-const newReact = reactive({a: 100})
-console.log(newReact.a)
-
-console.log(reactObj.getProps())
-console.log(reactObj.getListeners("other"))
-
-
-
-
-
-
+obj.destroy()
+console.log(obj)
 
 
 
 window.addEventListener("scroll", () => {
-    reactObj.scroll = window.scrollY
-    
+    obj.scroll = window.scrollY
+
 })

@@ -1,82 +1,95 @@
-export const reactive = (object, arrayFn = null) => {
+export const newReactive = () => {
+    let object = {}
+    let listenMap = {}
 
-    let listeners = {}
-    arrayFn && (listeners[Object.keys(object)[0]] = Array.isArray(arrayFn) ? arrayFn : [arrayFn])
+    const normalizeArray = (array) => {
+        return Array.isArray(array) ? array : [array]
+    }
 
     const { proxy, revoke } = Proxy.revocable(object, {
-        set(object, prop, value) {
-            object[prop] = value
-            listeners?.[prop]?.forEach(fn => {
-                try { fn(value) }
-                catch (error) { console.error("Error in reactive callBack: ", error, fn) }
+        
+        set(object, name, value) {
+            if (value === object[name]) return true
+
+            object[name] = value
+            listenMap[name] ??= []
+            listenMap[name].forEach(item => { 
+                try {item(value) }
+                catch (error) {console.error(`reactive: ${name} error in listener: `, error)}
             })
+            return true
+        },
+
+        deleteProperty(object, name) {
+            delete object[name]
+            delete listenMap[name]
             return true
         }
     })
 
-    proxy.add = (prop, functions = null) => {
-        if (typeof prop !== "object" && prop !== null) {
-            console.error("reactive: prop is not an object")
-            return null
+    object.add = ({ name = null, value = null, listeners = null } = {}) => {
+        if (name === null || value === undefined) {
+            console.error("reactive.add received invalid parametres")
+            return
         }
 
-        const name = Object.keys(prop)[0]
-        const value = Object.values(prop)[0]
-
-        if (name in proxy) {
-            console.error(`reactive: ${name} already declared, use addTo() if needed: `, proxy)
-            return null
+        if (name in object) {
+            console.error(`reactive.add ${name} previously added`)
+            return
         }
 
-        proxy[name] = value
+        listenMap[name] = listeners ? normalizeArray(listeners) : []
+        object[name] = value
+    }
 
-        if (functions) {
-            !Array.isArray(functions) && (functions = [functions])
-            listeners[name] = []
-            functions.forEach(fn => listeners[name].push(fn))
+    object.addTo = ({ name = null, listeners = null } = {}) => {
+        if (name === null || listeners === null) {
+            console.error("reactive.addTo received invalid parametres")
+            return
+        }
+
+        if (!(name in object)) {
+            console.error(`reactive.addTo not exist prop: `, name)
+            return
+        }
+
+        const newListeners = normalizeArray(listeners)
+        newListeners.forEach(item => listenMap[name].push(item))
+    }
+
+    object.remove = ({ name = null, listeners = null, all = false } = {}) => {
+        if (name === null || (listeners === null && !all)) {
+            console.error("reactive.remove received invalid name")
+            return
+        }
+
+        if (!(name in listenMap)) {
+            console.error(`reactive.remove not exist prop: `, name)
+            return
+        }
+
+        if (all) {
+            listenMap[name] = []
+        } else {
+            const normalizedListeners = normalizeArray(listeners)
+            const list = listenMap[name].filter(item => !normalizedListeners.includes(item))
+            listenMap[name] = list.length ? list : []
         }
     }
 
-    proxy.addTo = (prop, functions) => {
-        if (typeof prop !== "string") {
-            console.error(`reactive: ${prop} is not string`)
-            return null
-        }
+    object.getProps = () => Object.fromEntries(Object.entries(object).filter(([_, value]) => typeof value !== "function"))
 
-        if (!(prop in proxy)) {
-            console.error(`reactive: ${prop} is not in reactive object`, proxy)
-            return null
+    object.getListeners = (prop = null) => {
+        if (prop !== null && !(prop in listenMap)) {
+            console.error(`reactive.getListeners no exist: `, prop)
+            return
         }
-
-        if (!functions) {
-            console.error(`reactive: ${prop} funtions: `, functions)
-            return null
-        }
-
-        !Array.isArray(functions) && (functions = [functions])
-        listeners[prop] ??= []
-        functions.forEach(item => {
-            if (typeof item === 'function' && !listeners[prop].includes(item)) listeners[prop].push(item)
-        })
+        return prop !== null ? listenMap[prop] : listenMap
     }
 
-    proxy.getProps = () => Object.fromEntries(Object.entries(proxy).filter(([key, value]) => typeof value !== "function"))
-
-    proxy.getListeners = (prop) => {
-        if (!(prop in proxy)) {
-            console.error(`reactive: ${prop} doesn't exist in: `, proxy)
-            return null
-        }
-
-        if (!(prop in listeners)) {
-            console.error(`reactive: ${prop} has no listeners yet: `, proxy)
-            return null
-        }
-        return listeners[prop]
-    }
-
-    proxy.destroy = () => {
-        listeners = null
+    object.destroy = () => {
+        object = null
+        listenMap = null
         revoke()
     }
 
