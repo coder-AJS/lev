@@ -1,4 +1,4 @@
-export const newReactive = () => {
+export const reactive = () => {
     let object = {}
     let listenMap = {}
 

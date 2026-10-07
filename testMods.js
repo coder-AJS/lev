@@ -1,4 +1,4 @@
-import { newReactive } from "./helpers/reactive.js"
+import { reactive } from "./helpers/reactive.js"
 
 const fn1 = () => {
     console.log(1, obj.scroll)
@@ -16,7 +16,7 @@ const fn4 = () => {
     console.log(4)
 }
 
-const obj = newReactive()
+const obj = reactive()
 obj.add({
     name: "scroll",
     value: window.scrollY,

@@ -1,4 +1,4 @@
-class TextAppear extends HTMLElement {
+export class TextAppear extends HTMLElement {
     constructor() {
         super()
 
