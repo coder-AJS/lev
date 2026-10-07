@@ -1,47 +1,17 @@
-import { reactive } from "./helpers/reactive.js"
 
-const fn1 = () => {
-    console.log(1, obj.scroll)
-}
 
-const fn2 = () => {
-    console.log(2, obj.other)
-}
+/* appearText */
 
-const fn3 = () => {
-    console.log(3)
-}
+const mod = await import("./components/fallBack/textAppear.js")
+const comp = new mod.default
 
-const fn4 = () => {
-    console.log(4)
-}
-
-const obj = reactive()
-obj.add({
-    name: "scroll",
-    value: window.scrollY,
-    listeners: fn1
-})
-console.log(obj)
-
-obj.add({
-    name: "other",
-    value: 0
-})
-obj.addTo({
-    name: "scroll",
-    listeners: fn2
+comp.configure({
+    color: "white"
 })
 
-console.log(obj.getProps())
-console.log(obj.getListeners())
+document.body.appendChild(comp)
+comp.init()
 
-obj.destroy()
-console.log(obj)
+await new Promise(resolve => setTimeout(resolve, 1000))
 
-
-
-window.addEventListener("scroll", () => {
-    obj.scroll = window.scrollY
-
-})
+comp.update({color: "green"})

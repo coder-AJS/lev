@@ -9,4 +9,5 @@ body {
     width: 100vw;
     height: 200vh;
     border: 1px solid red;
+    background-color: rgb(28, 28, 28);
 }

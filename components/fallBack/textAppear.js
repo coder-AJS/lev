@@ -1,106 +1,110 @@
-export class TextAppear extends HTMLElement {
+const sharedStyle = new CSSStyleSheet()
+sharedStyle.replaceSync(
+    `:host {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        list-style: none;
+    }
+
+    .textBox {
+        display: flex;
+        width: auto;
+        height: auto;
+
+        .charBox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            height: auto;
+
+            .char {
+                position: relative;
+                top: 0;
+                font-family: var(--fontFamily, initial);
+                font-size: var(--fontSize, 40px);
+                color: var(--color, red);
+                letter-spacing: 4px;
+                transform: scale(1);
+                filter: blur(var(--filterBlur, 20px));
+                opacity: 0;
+            }
+
+            .empty {
+                width: calc(var(--fontSize, 40px) / 2);
+                height: 0;
+            }
+
+            .animated {
+                animation: appear var(--animationTempo, 6000ms) infinite;
+            }
+        }
+    }
+
+    @keyframes appear {
+        0% {
+            filter: blur(var(--filterBlur, 20px));
+            opacity: 0;
+            transform: scale(var(--scaleMax, 10));
+        }
+
+        10% {
+            filter: blur(0px);
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        70% {
+            top: 0;
+            filter: blur(0px);
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        100% {
+            top: 80px;
+            filter: blur(var(--filterBlur, 20px));
+            opacity: 0;
+            transform: scale(var(--scaleMin, 1));
+        }
+    }`
+)
+
+export default class TextAppear extends HTMLElement {
+    #destroy = false
+
     constructor() {
         super()
 
-        this.font = "initial"
-        this.text = "LOADING WAIT"
-        this.textSize = "40px"
-        this.textColor = "gray"
-        this.blur = "20px"
-        this.animationTempo = "6000" /* ms */
-        this.appearTempo = "140" /* ms */
+        this.textContent = "LOADING WAIT"
+        this.fontFamily = "initial"
+        this.fontSize = "40px"
+        this.color = "red"
+        this.filterBlur = "20px"
+        this.animationTempo = "6000ms"
+        this.appearTempo = "140"
         this.scaleMin = "1"
         this.scaleMax = "10"
 
         this.dom = this.attachShadow({ mode: "open" })
-        this.dom.innerHTML = `
-            <ul class="textBox"></ul>
-        `
+    }
 
-        const customStyle = this.dom.appendChild(document.createElement("style"))
-        customStyle.textContent = `
-            :host {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 100%;
-                height: 100%;
-            }
-
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                list-style: none;
-            }
-
-            .textBox {
-                display: flex;
-                width: auto;
-                height: auto;
-
-                .charBox {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: auto;
-                    height: auto;
-
-                    .char {
-                        position: relative;
-                        top: 0;
-                        font-family: ${this.font};
-                        font-size: ${this.textSize};
-                        color: ${this.textColor};
-                        letter-spacing: 4px;
-                        transform: scale(1);
-                        filter: blur(${this.blur});
-                        opacity: 0;
-                    }
-
-                    .empty {
-                        width: calc(${this.textSize} / 2);
-                        height: 0;
-                    }
-
-                    .animated {
-                        animation: appear ${this.animationTempo}ms infinite;
-                    }
-                }
-            }
-
-            @keyframes appear {
-                0% {
-                    filter: blur(${this.blur});
-                    opacity: 0;
-                    transform: scale(${this.scaleMax});
-                }
-
-                10% {
-                    filter: blur(0px);
-                    opacity: 1;
-                    transform: scale(1);
-                }
-
-                70% {
-                    top: 0;
-                    filter: blur(0px);
-                    opacity: 1;
-                    transform: scale(1);
-                }
-
-                100% {
-                    top: 80px;
-                    filter: blur(${this.blur});
-                    opacity: 0;
-                    transform: scale(${this.scaleMin});
-                }
-            }
-        `
+    #draw() {
+        this.dom.innerHTML = `<ul class="textBox"></ul>`
+        this.dom.adoptedStyleSheets = [sharedStyle]
     }
 
     #createBoxes() {
-        Array.from(this.text).forEach(char => {
+        Array.from(this.textContent).forEach(char => {
             const charBox = this.dom.querySelector(".textBox").appendChild(document.createElement("li"))
             charBox.classList.add("charBox")
 
@@ -113,14 +117,30 @@ export class TextAppear extends HTMLElement {
 
     async #animate(boxes) {
         for (const box of boxes) {
+            if (this.#destroy) return
             box.classList.add("animated")
             await new Promise(resolve => setTimeout(resolve, this.appearTempo))
         }
     }
 
+    configure(props) { Object.assign(this, props) }
+
+    update(props) {
+        Object.entries(props).forEach(([key, value]) => {
+            this.style.setProperty(`--${key}`, value)
+            this.configure({ [key]: value })
+        })
+    }
+
     init() {
+        this.#draw()
         const boxes = this.#createBoxes()
         this.#animate(boxes)
+    }
+
+    destroy() {
+        this.#destroy = true
+        this.remove()
     }
 }
 
