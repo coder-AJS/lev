@@ -6,7 +6,15 @@
 }
 
 body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100vw;
-    height: 200vh;
-    border: 1px solid red;
+    height: 100vh;
+    background-color: rgb(28, 28,28);
+
+    .test {
+        width: fit-content;
+        height: 200px;
+    }
 }
