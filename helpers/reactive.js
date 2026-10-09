@@ -95,3 +95,5 @@ export const reactive = () => {
 
     return proxy
 }
+
+export default reactive
