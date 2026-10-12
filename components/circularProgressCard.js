@@ -218,6 +218,12 @@ export default class CircularProgressTextCard extends HTMLElement {
     }
 
     async updateProgress(progress) {
+        if (progress <= this.#progress) {
+            console.error(`component error: updateProgress can't be less than or equal to acumulated progress`,
+                "\nacumulated progress: ", this.#progress, "\nrequest update: ", progress, "\ncomponent", this
+            )
+            return null
+        }
         const containerBox = this.dom.querySelector(".containerBox")
         const numberBox = Array.from(this.dom.querySelectorAll(".numberBox"))
 
