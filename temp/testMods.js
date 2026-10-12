@@ -1,6 +1,7 @@
 const testBox = document.querySelector("#test")
 
-const compMod = await import("../../components/fallBack/textAppear.js")
+/* test textAppear */
+/* const compMod = await import("../components/textAppear.js")
 const component = testBox.appendChild(new compMod.default())
 
 component.configure("css", {
@@ -13,5 +14,25 @@ component.configure("css", {
 component.configure("logic", {
     text: "FRONT-END DEVELOPER",
 })
+
+component.init() */
+
+/* test cards */
+const compMod = await import("../components/circularProgressCard.js")
+const component = testBox.appendChild(new compMod.default())
+
+component.configure("css", {
+    backgroundImage: "./temp/images/rocky-mountain.jpg",
+    mainFont: "oxanium",
+    counterFont: "conthrax",
+    domWidth: "300px",
+    domHeight: "460px"
+})
+
+component.configure("logic", {
+    title: "HTML",
+    progress: 90
+})
+
 
 component.init()

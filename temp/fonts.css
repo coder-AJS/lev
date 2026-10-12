@@ -1,7 +1,26 @@
 @font-face {
-    font-family: 'neuropol'; 
-    src: url('./neuropol.otf') format('opentype');
+    font-family: 'neuropol';
+    src: url('./fonts/neuropol.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
-    font-display: swap; /* Recomendado para que el texto cargue rápido */
+    font-display: swap;
+    /* Recomendado para que el texto cargue rápido */
+}
+
+@font-face {
+    font-family: 'conthrax';
+    src: url('./fonts/Conthrax-SemiBold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    /* Recomendado para que el texto cargue rápido */
+}
+
+@font-face {
+    font-family: 'oxanium';
+    src: url('./fonts/Oxanium-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    /* Recomendado para que el texto cargue rápido */
 }

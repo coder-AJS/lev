@@ -14,7 +14,7 @@ body {
     background-color: rgb(28, 28,28);
 
     .test {
-        width: fit-content;
-        height: 200px;
+        width: 50%;
+        height: 50%;
     }
 }
