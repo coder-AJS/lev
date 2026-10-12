@@ -165,11 +165,12 @@ export default class CircularProgressTextCard extends HTMLElement {
         }
 
         this.dom = this.attachShadow({ mode: "open" })
+        this.dom.adoptedStyleSheets = [globalStyle]
     }
 
     async #draw() {
         this.dom.innerHTML = `
-            <style>${this.#node.style}</style>
+            <style>${this.#node.style ?? ""}</style>
             <div class="mainBox max animated relative">
                 <div class="bar barTop FCenter animated absolute">${this.logic.title}</div>
                 <div id="node" class="bar barBottom animated absolute">${this.#node.html}</div>
@@ -211,7 +212,6 @@ export default class CircularProgressTextCard extends HTMLElement {
         configObj === this.css && this.update()
 
         this.#configured = true
-        this.dom.adoptedStyleSheets = [globalStyle]
     }
 
     update() {
@@ -262,10 +262,10 @@ export default class CircularProgressTextCard extends HTMLElement {
 
     async init() {
         if (this.#configured && !this.#initialized) {
+            this.#initialized = true
             await this.#draw()
             await this.#sleep(1000)
             this.logic.autoInit && this.updateProgress(this.logic.progress)
-            this.#initialized = true
         } else {
             console.error("component error: not configured", this)
         }
