@@ -34,5 +34,6 @@ component.configure("logic", {
     progress: 90
 })
 
+component.addToNode({html: "a", style: "a"})
 
 component.init()

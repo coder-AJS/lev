@@ -23,29 +23,35 @@ globalStyle.replaceSync(`
         box-shadow: 8px 8px 10px var(--black);
         overflow: hidden;
 
-        .bars {
+        .bar {
             width: 100%;
             height: 60px;
             background-color: rgba(255, 255, 255, 0.2);
             font-family: var(--mainFont);
-            font-size: 20px;
-            color: gainsboro;
+            color: white;
             letter-spacing: 2px;
             backdrop-filter: blur(4px);
+        }
 
-            &:nth-child(2) {
+        .barTop {
+            height: 60px;
+            font-size: 20px;
+        }
+
+        .barBottom {
+            height: 34%;
+            top: calc(100% - 30px);
+
+            .nodeNotConfigured {
                 width: 100%;
-                height: 34%;
-                top: calc(100% - 30px);
-
-                .infoBox {
-                }
+                height: 30px;
             }
         }
 
         .statBox {
             top: 0;
             padding: 18%;
+            border: 1px solid red;
 
             .circleBox {
                 top: 25%;
@@ -68,8 +74,6 @@ globalStyle.replaceSync(`
                 }
 
                 .circleInt {
-                    display: flex;
-                    flex-direction: column;
                     align-items: center;
                     width: calc(100% - 31px);
                     aspect-ratio: 1/1;
@@ -81,7 +85,7 @@ globalStyle.replaceSync(`
                     container-type: inline-size;
 
                     .symbolLayer {
-                        bottom: 14%;
+                        bottom: 18%;
                         font-size: 18cqi;
                     }
 
@@ -94,8 +98,7 @@ globalStyle.replaceSync(`
                         .numberBox {
                             width: 28cqi;
                             height: auto;
-                            font-size: 32cqi;
-                            border: 1px solid red;
+                            font-size: 30cqi;
                         }
                     }
                 }
@@ -112,13 +115,13 @@ globalStyle.replaceSync(`
         &:has(.statBox .hiddenInput:checked) {
             background-size: auto 300%;
 
-            & .bars {
+            & .bar {
                 color: rgb(60, 60, 60);
                 background-color: rgba(255, 255, 255, 0.5);
+            }
 
-                &:nth-child(2) {
-                    top: 66%;
-                }
+            & .barBottom {
+                top: 66%;
             }
 
             & .statBox .circleBox {
@@ -131,14 +134,18 @@ globalStyle.replaceSync(`
     .relative { position: relative; }
     .max { width: 100%; height: 100%; }
     .FCenter { display: flex; justify-content: center; align-items: center; }
+    .FCol { display: flex; flex-direction: column; }
     .animated { transition: 500ms ease-in-out;
 }
 `
 )
 
 export default class CircularProgressTextCard extends HTMLElement {
-    #configured = false
     #progress = 0
+    #configured = false
+    #nodeConfigured = false
+    #initialized = false
+    #node = { html: "NODE NOT CONFIGURED", style: null }
 
     constructor() {
         super()
@@ -162,18 +169,15 @@ export default class CircularProgressTextCard extends HTMLElement {
 
     async #draw() {
         this.dom.innerHTML = `
+            <style>${this.#node.style}</style>
             <div class="mainBox max animated relative">
-                <div class="bars FCenter animated absolute">${this.logic.title}</div>
-                <div class="bars animated absolute">
-                    <div class="infoBox max relative">
-
-                    </div>
-                </div>
-                <div class="statBox max animated relative">
+                <div class="bar barTop FCenter animated absolute">${this.logic.title}</div>
+                <div id="node" class="bar barBottom animated absolute">${this.#node.html}</div>
+                <div class="statBox max animated absolute">
                     <ul class="circleBox FCenter animated relative">
                         <li class="circleExt"></li>
                         <li class="circleLine absolute"></li>
-                        <li class="circleInt absolute">
+                        <li class="circleInt FCol absolute">
                             <ul class="containerBox absolute">
                                 <li class="numberBox FCenter">${this.#progress}</li>
                             </ul>
@@ -191,14 +195,14 @@ export default class CircularProgressTextCard extends HTMLElement {
 
     configure(type, config) {
         if (type !== "css" && type !== "logic") {
-            console.error("error in configure method type not valid", this)
+            console.error("component error: configure type not valid", this)
             return null
         }
 
         const configObj = type === "css" ? this.css : this.logic
         for (const key of Object.keys(config)) {
             if (!(key in configObj)) {
-                console.error(`component configure error, ${key} is not valid prop`, this)
+                console.error(`component error: ${key} is not valid prop`, this)
                 return null
             }
         }
@@ -243,11 +247,25 @@ export default class CircularProgressTextCard extends HTMLElement {
         }
     }
 
+    addToNode(obj) {
+        if (!obj?.html || !obj?.style) {
+            console.error("component error: addToNode error parameters", this)
+            return null
+        }
+
+        if (!this.#nodeConfigured && !this.#initialized) {
+            this.#node.style = obj.style
+            this.#node.html = obj.html
+            this.#nodeConfigured = true
+        }
+    }
+
     async init() {
-        if (this.#configured) {
+        if (this.#configured && !this.#initialized) {
             await this.#draw()
             await this.#sleep(1000)
             this.logic.autoInit && this.updateProgress(this.logic.progress)
+            this.#initialized = true
         } else {
             console.error("component error: not configured", this)
         }
