@@ -144,12 +144,15 @@ globalStyle.replaceSync(`
 )
 
 export default class CircularProgressTextCard extends HTMLElement {
-    #progress = 0
-    #configured = false
-    #nodeConfigured = false
+    #configuredCss = false
+    #configuredLogic = false
+    #configureImage = false
+    #configuredNode = false
     #initialized = false
-    #backImage = false
+    #ready = false
+
     #node = { html: "NODE NOT CONFIGURED", style: null }
+    #progress = 0
 
     constructor() {
         super()
@@ -163,6 +166,8 @@ export default class CircularProgressTextCard extends HTMLElement {
         }
 
         this.logic = {
+            id: null,
+            dom: document,
             title: "title",
             progress: 0,
             autoInit: true
@@ -199,14 +204,37 @@ export default class CircularProgressTextCard extends HTMLElement {
 
     async #sleep(ms) { await new Promise(resolve => setTimeout(resolve, ms)) }
 
-    configure(type, config) {
+    async #unloadImg(url) {
+        return new Promise((resolve, reject) => {
+            const newImage = new Image()
+            newImage.src = url
+            newImage.onload = () => resolve(newImage)
+            newImage.onerror = (e) => reject(e)
+        })
+            .then(() => {
+                this.#configureImage = true
+                this.#alertDom()
+            })
+            .catch((e) => {
+                console.error("component error: failed lo get image", this)
+                throw e
+            })
+    }
+
+    #alertDom() {
+        if (this.#configuredCss && this.#configuredLogic && this.#configureImage && this.#configuredNode) {
+            this.#ready = true
+            this.logic.dom.dispatchEvent(new CustomEvent("component", { detail: { id: this.logic.id, state: true } }))
+        }
+    }
+
+    async configure(type, config) {
         if (type !== "css" && type !== "logic") {
             console.error("component error: configure type not valid", this)
             return null
         }
 
         const configObj = type === "css" ? this.css : this.logic
-
         for (const key of Object.keys(config)) {
             if (!(key in configObj)) {
                 console.error(`component error: ${key} is not valid prop`, this)
@@ -214,22 +242,19 @@ export default class CircularProgressTextCard extends HTMLElement {
             }
         }
 
-        Object.assign(configObj, config)
-        if (configObj === this.css) {
-            this.update()
-            if (configObj.backgroundImage) {
-                return new Promise((resolve, reject) => {
-                    const newImage = new Image()
-                    newImage.src = config.backgroundImage
-                    newImage.onload = () => resolve(newImage)
-                    newImage.onerror = (e) => reject(e)
-                })
-                .then(() => this.#backImage = true)
-                .catch(() => console.error("component error: failed lo get iamge", this))
-            }
+        if (type === "logic") {
+            Object.assign(configObj, config)
+            this.#configuredLogic = true
         }
 
-        this.#configured = true
+        if (type === "css") {
+            Object.assign(configObj, config)
+            this.update()
+            this.#configuredCss = true
+            configObj.backgroundImage && await this.#unloadImg(configObj.backgroundImage)
+        }
+
+        this.#alertDom()
     }
 
     update() {
@@ -271,21 +296,21 @@ export default class CircularProgressTextCard extends HTMLElement {
             return null
         }
 
-        if (!this.#nodeConfigured && !this.#initialized) {
+        if (!this.#configuredNode && !this.#initialized) {
             this.#node.style = obj.style
             this.#node.html = obj.html
-            this.#nodeConfigured = true
+            this.#configuredNode = true
+            this.#alertDom()
         }
     }
 
     async init() {
-        if (this.#configured && !this.#initialized) {
+        if (this.#ready) {
             this.#initialized = true
             await this.#draw()
-            await this.#sleep(1000)
             this.logic.autoInit && this.updateProgress(this.logic.progress)
         } else {
-            console.error("component error: not configured", this)
+            console.error("component error: not ready", this)
         }
     }
 }

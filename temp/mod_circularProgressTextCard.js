@@ -2,7 +2,12 @@ export const init = async (box) => {
     const compMod = await import("../components/circularProgressCard.js")
     const component = box.appendChild(new compMod.default())
 
-    component.configure("css", {
+    document.addEventListener("component", (e) => {
+        console.log(e.detail.id, e.detail.state)
+        component.init()
+    })
+
+    await component.configure("css", {
         backgroundImage: "./temp/images/rocky-mountain.jpg",
         mainFont: "oxanium",
         counterFont: "conthrax",
@@ -10,12 +15,12 @@ export const init = async (box) => {
         domHeight: "460px"
     })
 
-    component.configure("logic", {
+    await component.configure("logic", {
+        id: "card",
         title: "HTML",
         progress: 90
     })
 
     component.addToNode({ html: "a", style: "a" })
 
-    component.init()
 }
