@@ -12,6 +12,8 @@ globalStyle.replaceSync(`
         display: flex;
         width: var(--domWidth, 100%);
         height: var(--domHeight, 100%);
+        opacity: 0;
+        transition: 500ms;
     }
 
     .mainBox {
@@ -199,7 +201,6 @@ export default class CircularProgressTextCard extends HTMLElement {
                 </div>
             </div>
         `
-        return
     }
 
     async #sleep(ms) { await new Promise(resolve => setTimeout(resolve, ms)) }
@@ -208,8 +209,9 @@ export default class CircularProgressTextCard extends HTMLElement {
         return new Promise((resolve, reject) => {
             const newImage = new Image()
             newImage.src = url
-            newImage.onload = () => resolve(newImage)
-            newImage.onerror = (e) => reject(e)
+            newImage.decode()
+                .then(() => resolve(newImage))
+                .catch((e) => reject(e))
         })
             .then(() => {
                 this.#configureImage = true
@@ -307,7 +309,8 @@ export default class CircularProgressTextCard extends HTMLElement {
     async init() {
         if (this.#ready) {
             this.#initialized = true
-            await this.#draw()
+            this.#draw()
+            this.style.opacity = "1"
             this.logic.autoInit && this.updateProgress(this.logic.progress)
         } else {
             console.error("component error: not ready", this)
