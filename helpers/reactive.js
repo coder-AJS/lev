@@ -13,9 +13,9 @@ export const reactive = () => {
 
             object[name] = value
             listenMap[name] ??= []
-            listenMap[name].forEach(item => { 
-                try {item(value) }
-                catch (error) {console.error(`reactive: ${name} error in listener: `, error)}
+            listenMap[name].forEach(listener => { 
+                try {listener(value) }
+                catch (error) {console.error(`reactive: ${name} error in listener:\n`, listener, error)}
             })
             return true
         },
