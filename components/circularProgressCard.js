@@ -15,13 +15,16 @@ globalStyle.replaceSync(`
     }
 
     .mainBox {
-        background-image: var(--backgroundImage);
-        background-size: auto 120%;
-        background-repeat: no-repeat;
-        background-position: center;
         border-radius: 16px;
         box-shadow: 8px 8px 10px var(--black);
         overflow: hidden;
+
+        .backLayer {
+            background-image: var(--backgroundImage);
+            background-size: auto 120%;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
 
         .bar {
             width: 100%;
@@ -145,6 +148,7 @@ export default class CircularProgressTextCard extends HTMLElement {
     #configured = false
     #nodeConfigured = false
     #initialized = false
+    #backImage = false
     #node = { html: "NODE NOT CONFIGURED", style: null }
 
     constructor() {
@@ -172,6 +176,7 @@ export default class CircularProgressTextCard extends HTMLElement {
         this.dom.innerHTML = `
             <style>${this.#node.style ?? ""}</style>
             <div class="mainBox max animated relative">
+                <div class="backLayer max absolute"></div>
                 <div class="bar barTop FCenter animated absolute">${this.logic.title}</div>
                 <div id="node" class="bar barBottom animated absolute">${this.#node.html}</div>
                 <div class="statBox max animated absolute">
@@ -201,6 +206,7 @@ export default class CircularProgressTextCard extends HTMLElement {
         }
 
         const configObj = type === "css" ? this.css : this.logic
+
         for (const key of Object.keys(config)) {
             if (!(key in configObj)) {
                 console.error(`component error: ${key} is not valid prop`, this)
@@ -209,7 +215,19 @@ export default class CircularProgressTextCard extends HTMLElement {
         }
 
         Object.assign(configObj, config)
-        configObj === this.css && this.update()
+        if (configObj === this.css) {
+            this.update()
+            if (configObj.backgroundImage) {
+                return new Promise((resolve, reject) => {
+                    const newImage = new Image()
+                    newImage.src = config.backgroundImage
+                    newImage.onload = () => resolve(newImage)
+                    newImage.onerror = (e) => reject(e)
+                })
+                .then(() => this.#backImage = true)
+                .catch(() => console.error("component error: failed lo get iamge", this))
+            }
+        }
 
         this.#configured = true
     }
