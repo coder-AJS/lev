@@ -140,7 +140,7 @@ globalStyle.replaceSync(`
     .max { width: 100%; height: 100%; }
     .FCenter { display: flex; justify-content: center; align-items: center; }
     .FCol { display: flex; flex-direction: column; }
-    .animated { transition: 500ms ease-in-out;
+    .animated { transition: 500ms ease-out;
 }
 `
 )
