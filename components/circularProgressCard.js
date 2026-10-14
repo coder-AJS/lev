@@ -172,7 +172,7 @@ export default class CircularProgressTextCard extends HTMLElement {
             dom: document,
             title: "title",
             progress: 0,
-            autoInit: true
+            autoInit: false
         }
 
         this.dom = this.attachShadow({ mode: "open" })
