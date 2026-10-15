@@ -253,10 +253,10 @@ export default class CircularProgressTextCard extends HTMLElement {
             Object.assign(configObj, config)
             this.update()
             this.#configuredCss = true
-            configObj.backgroundImage && await this.#unloadImg(configObj.backgroundImage)
+            configObj.backgroundImage && this.#unloadImg(configObj.backgroundImage)
         }
 
-        this.#alertDom()
+        if (this.#configuredCss && this.#configuredLogic && this.#configuredNode && this.#configureImage) this.#alertDom()
     }
 
     update() {
