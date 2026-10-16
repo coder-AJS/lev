@@ -10,20 +10,18 @@ globalStyle.replaceSync(`
 
     :host {
         display: flex;
-        width: var(--domWidth, 100%);
-        height: var(--domHeight, 100%);
+        width: 100%;
+        height: 100%;
         opacity: 0;
         transition: 500ms;
     }
 
     .mainBox {
-        border-radius: 16px;
-        box-shadow: 8px 8px 10px var(--black);
         overflow: hidden;
 
         .backLayer {
             background-image: var(--backgroundImage);
-            background-size: auto 120%;
+            background-size: auto 140%;
             background-repeat: no-repeat;
             background-position: center;
         }
@@ -32,7 +30,7 @@ globalStyle.replaceSync(`
             width: 100%;
             height: 60px;
             background-color: rgba(255, 255, 255, 0.2);
-            font-family: var(--mainFont);
+            font-family: var(--familyFont_1);
             color: white;
             letter-spacing: 2px;
             backdrop-filter: blur(4px);
@@ -56,13 +54,11 @@ globalStyle.replaceSync(`
         .statBox {
             top: 0;
             padding: 18%;
-            border: 1px solid red;
 
             .circleBox {
                 top: 25%;
                 width: 100%;
                 aspect-ratio: 1/1;
-                border: 1px solid red;
 
                 .circleExt {
                     width: 100%;
@@ -84,7 +80,7 @@ globalStyle.replaceSync(`
                     aspect-ratio: 1/1;
                     border-radius: 50%;
                     background-color: rgba(0, 0, 0, 0.8);
-                    font-family: var(--counterFont);
+                    font-family: var(--familyFont_2);
                     color: white;
                     mix-blend-mode: multiply;
                     container-type: inline-size;
@@ -118,20 +114,16 @@ globalStyle.replaceSync(`
         }
 
         &:has(.statBox .hiddenInput:checked) {
-            background-size: auto 300%;
-
+            .backLayer { background-size: auto 240%; }
+            
             & .bar {
                 color: rgb(60, 60, 60);
                 background-color: rgba(255, 255, 255, 0.5);
             }
 
-            & .barBottom {
-                top: 66%;
-            }
+            & .barBottom { top: 66%; }
 
-            & .statBox .circleBox {
-                top: 10%;
-            }
+            & .statBox .circleBox { top: 10%; }
         }
     }
 
@@ -140,12 +132,12 @@ globalStyle.replaceSync(`
     .max { width: 100%; height: 100%; }
     .FCenter { display: flex; justify-content: center; align-items: center; }
     .FCol { display: flex; flex-direction: column; }
-    .animated { transition: 500ms ease-out;
+    .transitioned { transition: 300ms ease-in-out;
 }
 `
 )
 
-export default class CircularProgressTextCard extends HTMLElement {
+export default class AvancedProgressCard001 extends HTMLElement {
     #configuredCss = false
     #configuredLogic = false
     #configureImage = false
@@ -161,18 +153,16 @@ export default class CircularProgressTextCard extends HTMLElement {
 
         this.css = {
             backgroundImage: "none",
-            mainFont: "inherit",
-            counterFont: "inherit",
-            domWidth: "400px",
-            domHeight: "500px"
+            familyFont_1: "inherit",
+            familyFont_2: "inherit",
         }
 
         this.logic = {
             id: null,
             dom: document,
             title: "title",
-            progress: 0,
-            autoInit: false
+            autoInit: false,
+            autoExpand: false
         }
 
         this.dom = this.attachShadow({ mode: "open" })
@@ -182,12 +172,12 @@ export default class CircularProgressTextCard extends HTMLElement {
     async #draw() {
         this.dom.innerHTML = `
             <style>${this.#node.style ?? ""}</style>
-            <div class="mainBox max animated relative">
-                <div class="backLayer max absolute"></div>
-                <div class="bar barTop FCenter animated absolute">${this.logic.title}</div>
-                <div id="node" class="bar barBottom animated absolute">${this.#node.html}</div>
-                <div class="statBox max animated absolute">
-                    <ul class="circleBox FCenter animated relative">
+            <div class="mainBox max transitioned relative">
+                <div class="backLayer max transitioned absolute"></div>
+                <div class="bar barTop FCenter transitioned absolute">${this.logic.title}</div>
+                <div id="node" class="bar barBottom transitioned absolute">${this.#node.html}</div>
+                <div class="statBox max transitioned absolute">
+                    <ul class="circleBox FCenter transitioned relative">
                         <li class="circleExt"></li>
                         <li class="circleLine absolute"></li>
                         <li class="circleInt FCol absolute">
@@ -197,7 +187,7 @@ export default class CircularProgressTextCard extends HTMLElement {
                             <div class="symbolLayer absolute">%</div>
                         </li>
                     </ul>
-                    <input type="checkbox" class="hiddenInput max absolute">
+                    <input id="toggleExpand" type="checkbox" class="hiddenInput max absolute">
                 </div>
             </div>
         `
@@ -290,6 +280,13 @@ export default class CircularProgressTextCard extends HTMLElement {
             numberBox.forEach((item, index) => item.textContent = String(this.#progress)[index])
             await this.#sleep(20)
         }
+
+        this.logic.autoExpand && this.#simulateInteraction()
+    }
+
+    #simulateInteraction = () => {
+        const toggleInput = this.dom.querySelector("#toggleExpand")
+        toggleInput.checked = !toggleInput.checked
     }
 
     addToNode(obj) {
@@ -318,4 +315,4 @@ export default class CircularProgressTextCard extends HTMLElement {
     }
 }
 
-customElements.define("circular-progress-text-card", CircularProgressTextCard)
+customElements.define("avanced-progress-card-001", AvancedProgressCard001)
