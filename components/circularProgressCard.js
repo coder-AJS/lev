@@ -226,7 +226,7 @@ export default class CircularProgressTextCard extends HTMLElement {
     #alertDom() {
         if (this.#configuredCss && this.#configuredLogic && this.#configureImage && this.#configuredNode) {
             this.#ready = true
-            this.logic.dom.dispatchEvent(new CustomEvent("component", { detail: { id: this.logic.id, state: true } }))
+            this.logic.dom.dispatchEvent(new CustomEvent("component", { detail: { id: this.logic.id, state: true, instance: this } }))
         }
     }
 
