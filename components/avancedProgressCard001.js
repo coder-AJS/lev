@@ -11,9 +11,15 @@ globalStyle.replaceSync(`
     :host {
         display: flex;
         width: 100%;
+        max-width: 600px;
+        min-width: 250px;
         height: 100%;
         opacity: 0;
         transition: 500ms;
+
+        --topBarHeight: 60px;
+        --nodeClosedHeight: 30px;
+        --nodeOpenedHeight: 34%;
     }
 
     .mainBox {
@@ -21,44 +27,39 @@ globalStyle.replaceSync(`
 
         .backLayer {
             background-image: var(--backgroundImage);
-            background-size: auto 140%;
+            background-size: auto 200%;
             background-repeat: no-repeat;
             background-position: center;
         }
 
         .bar {
             width: 100%;
-            height: 60px;
             background-color: rgba(255, 255, 255, 0.2);
-            font-family: var(--familyFont_1);
+            font-family: var(--fontFamily_1);
             color: white;
             letter-spacing: 2px;
             backdrop-filter: blur(4px);
         }
 
         .barTop {
-            height: 60px;
+            height: var(--topBarHeight);
             font-size: 20px;
         }
 
         .barBottom {
-            height: 34%;
-            top: calc(100% - 30px);
-
-            .nodeNotConfigured {
-                width: 100%;
-                height: 30px;
-            }
+            height: var(--nodeOpenedHeight);
+            top: calc(100% - var(--nodeClosedHeight));
         }
 
         .statBox {
-            top: 0;
-            padding: 18%;
+            top: var(--topBarHeight);
+            width: 100%;
+            height: calc(100% - var(--topBarHeight) - var(--nodeClosedHeight));
 
             .circleBox {
-                top: 25%;
-                width: 100%;
-                aspect-ratio: 1/1;
+                width: 70%;
+                max-width: 200px;
+                height: fit-content;
 
                 .circleExt {
                     width: 100%;
@@ -80,7 +81,7 @@ globalStyle.replaceSync(`
                     aspect-ratio: 1/1;
                     border-radius: 50%;
                     background-color: rgba(0, 0, 0, 0.8);
-                    font-family: var(--familyFont_2);
+                    font-family: var(--fontFamily_2);
                     color: white;
                     mix-blend-mode: multiply;
                     container-type: inline-size;
@@ -104,26 +105,26 @@ globalStyle.replaceSync(`
                     }
                 }
             }
-
-            .hiddenInput {
-                appearance: none;
-                top: 0;
-                left: 0;
-                cursor: pointer;
-            }
         }
 
-        &:has(.statBox .hiddenInput:checked) {
-            .backLayer { background-size: auto 240%; }
+        .hiddenInput {
+            appearance: none;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+        &:has(.hiddenInput:checked) {
+            .backLayer { background-size: auto 400%; }
             
             & .bar {
                 color: rgb(60, 60, 60);
                 background-color: rgba(255, 255, 255, 0.5);
             }
 
-            & .barBottom { top: 66%; }
+            & .barBottom { top: calc(100% - var(--nodeOpenedHeight)); }
 
-            & .statBox .circleBox { top: 10%; }
+            & .statBox { height: calc((100% - var(--nodeOpenedHeight)) - var(--topBarHeight)); }
         }
     }
 
@@ -153,8 +154,8 @@ export default class AvancedProgressCard001 extends HTMLElement {
 
         this.css = {
             backgroundImage: "none",
-            familyFont_1: "inherit",
-            familyFont_2: "inherit",
+            fontFamily_1: "inherit",
+            fontFamily_2: "inherit",
         }
 
         this.logic = {
@@ -176,7 +177,7 @@ export default class AvancedProgressCard001 extends HTMLElement {
                 <div class="backLayer max transitioned absolute"></div>
                 <div class="bar barTop FCenter transitioned absolute">${this.logic.title}</div>
                 <div id="node" class="bar barBottom transitioned absolute">${this.#node.html}</div>
-                <div class="statBox max transitioned absolute">
+                <div class="statBox FCenter transitioned absolute">
                     <ul class="circleBox FCenter transitioned relative">
                         <li class="circleExt"></li>
                         <li class="circleLine absolute"></li>
@@ -187,8 +188,8 @@ export default class AvancedProgressCard001 extends HTMLElement {
                             <div class="symbolLayer absolute">%</div>
                         </li>
                     </ul>
-                    <input id="toggleExpand" type="checkbox" class="hiddenInput max absolute">
                 </div>
+                <input id="toggleExpand" type="checkbox" class="hiddenInput max absolute">
             </div>
         `
     }
@@ -289,7 +290,7 @@ export default class AvancedProgressCard001 extends HTMLElement {
         toggleInput.checked = boolean
     }
 
-    toogleExpand(boolean) {
+    toggleExpand(boolean) {
         this.#simulateInteraction(boolean)
     }
 

@@ -2,7 +2,7 @@ const testBox = document.querySelector("#test")
 
 const components = {
     "textAppear": "./mod_textAppear.js",
-    "circularProgressTextCard": "./mod_circularProgressTextCard.js"
+    "avancedProgressCard001": "./mod_avancedProgressCard001.js"
 }
 
 const load = async (component) => {
@@ -10,4 +10,4 @@ const load = async (component) => {
 
 }
 
-load("circularProgressTextCard")
+load("avancedProgressCard001")

@@ -9,8 +9,8 @@ export const init = async (box) => {
 
     await component.configure("css", {
         backgroundImage: "./temp/images/rocky-mountain.jpg",
-        mainFont: "oxanium",
-        counterFont: "conthrax",
+        fontFamily_1: "oxanium",
+        fontFamily_2: "conthrax",
     })
 
     await component.configure("logic", {
