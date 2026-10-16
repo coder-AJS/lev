@@ -281,12 +281,16 @@ export default class AvancedProgressCard001 extends HTMLElement {
             await this.#sleep(20)
         }
 
-        this.logic.autoExpand && this.#simulateInteraction()
+        this.logic.autoExpand && this.#simulateInteraction(true)
     }
 
-    #simulateInteraction = () => {
+    #simulateInteraction = (boolean) => {
         const toggleInput = this.dom.querySelector("#toggleExpand")
-        toggleInput.checked = !toggleInput.checked
+        toggleInput.checked = boolean
+    }
+
+    toogleExpand(boolean) {
+        this.#simulateInteraction(boolean)
     }
 
     addToNode(obj) {
