@@ -1,20 +1,3 @@
-export const addToDom = ({
-    tag = null,
-    className = [],
-    id = null,
-    parent = document.body,
-    attributes = {}
-} = {}) => {
-    const newElement = add({
-        "tag": tag,
-        "className": className,
-        "id": id,
-        "attributes": attributes
-    })
-    parent.appendChild(newElement)
-    return newElement
-}
-
 export const add = ({
     tag = null,
     className = [],
@@ -37,4 +20,21 @@ export const add = ({
     id && (element.id = id)
     attributes && Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value))
     return element
+}
+
+export const addToDom = ({
+    tag = null,
+    className = [],
+    id = null,
+    parent = document.body,
+    attributes = {}
+} = {}) => {
+    const newElement = add({
+        "tag": tag,
+        "className": className,
+        "id": id,
+        "attributes": attributes
+    })
+    parent.appendChild(newElement)
+    return newElement
 }
