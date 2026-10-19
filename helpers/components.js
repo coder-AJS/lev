@@ -14,6 +14,6 @@ export const addComponent = async ({
     parent.appendChild(instance)
     css && await instance.configure("css", css)
     logic && await instance.configure("logic", logic)
-    node && await instance.configure("node", await addnodesTemplate(node))
+    node && await instance.configure("node", node)
     return instance
 }
