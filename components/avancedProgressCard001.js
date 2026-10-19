@@ -11,7 +11,7 @@ globalStyle.replaceSync(`
     :host {
         display: flex;
         width: 100%;
-        max-width: 600px;
+        max-width: 340px;
         min-width: 250px;
         height: 100%;
         opacity: 0;
@@ -27,7 +27,7 @@ globalStyle.replaceSync(`
 
         .backLayer {
             background-image: var(--backgroundImage);
-            background-size: auto 200%;
+            background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
         }
@@ -115,7 +115,7 @@ globalStyle.replaceSync(`
         }
 
         &:has(.hiddenInput:checked) {
-            .backLayer { background-size: auto 400%; }
+            .backLayer { transform: scale(2); }
             
             & .bar {
                 color: rgb(60, 60, 60);
@@ -133,7 +133,7 @@ globalStyle.replaceSync(`
     .max { width: 100%; height: 100%; }
     .FCenter { display: flex; justify-content: center; align-items: center; }
     .FCol { display: flex; flex-direction: column; }
-    .transitioned { transition: 300ms ease-in-out;
+    .transitioned { transition: 350ms ease-in-out;
 }
 `
 )
@@ -257,7 +257,7 @@ export default class AvancedProgressCard001 extends HTMLElement {
         })
     }
 
-    async updateProgress(progress) {
+    async progress(progress) {
         if (progress <= this.#progress) {
             console.error(`component error: updateProgress can't be less than or equal to acumulated progress`,
                 "\nacumulated progress: ", this.#progress, "\nrequest update: ", progress, "\ncomponent", this

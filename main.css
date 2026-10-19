@@ -14,7 +14,7 @@ body {
     background-color: rgb(28, 28,28);
 
     .test {
-        width: 50%;
-        height: 70%;
+            width: 320px;
+            height: 500px;
     }
 }
