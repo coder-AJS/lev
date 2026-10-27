@@ -30,7 +30,7 @@ export const getVar = (prop, element = null) => {
  * @returns {null|undefined} Returns null if validation fails, otherwise undefined.
  */
 export const setVar = (prop, value, element) => {
-    if (!element || !prop || !value) return onError()
+    if (!element || prop == null || value == null) return onError()
     const propName = prop.startsWith("--") ? prop : `--${prop}`
     element.style.setProperty(propName, value)
 }

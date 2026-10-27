@@ -45,6 +45,28 @@ export const add = ({
 * @returns {HTMLElement|null}
 */
 
+export const addTo = ({
+    tag = null,
+    id = null,
+    className = null,
+    attributes = null,
+    parent = document.body
+} = {}) => {
+    const info = () => console.table({ tag: "string", className: "string (optional)", id: "string (optional)", attributes: "Object (optional)" })
+
+    const newElement = add({
+        "tag": tag,
+        "id": id,
+        "className": className,
+        "attributes": attributes
+    })
+
+    if (!newElement) return onError(info)
+    parent.appendChild(newElement)
+    return newElement
+}
+
+/* DEPRECATED */
 export const addToDom = ({
     tag = null,
     id = null,
@@ -52,6 +74,7 @@ export const addToDom = ({
     attributes = null,
     parent = document.body
 } = {}) => {
+    console.info("DEPRECATED USE ADDTO")
     const info = () => console.table({ tag: "string", className: "string (optional)", id: "string (optional)", attributes: "Object (optional)" })
 
     const newElement = add({
