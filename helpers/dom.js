@@ -74,7 +74,7 @@ export const addToDom = ({
     attributes = null,
     parent = document.body
 } = {}) => {
-    console.info("DEPRECATED USE ADDTO")
+    console.trace("DEPRECATED USE ADDTO")
     const info = () => console.table({ tag: "string", className: "string (optional)", id: "string (optional)", attributes: "Object (optional)" })
 
     const newElement = add({
