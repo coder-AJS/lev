@@ -1,39 +1,32 @@
-export const addComponent = async ({
-    module = null,
-    parent = null,
-    css = null,
-    logic = null,
-    node = null,
-
-} = {}) => {
-    console.trace("DEPRECATED USE ADD")
-    if (!module || !parent) {
-        console.error("addComponent error: lost parametres")
-        return null
-    }
-    const instance = new module.default()
-    parent.appendChild(instance)
-    css && await instance.configure("css", css)
-    logic && await instance.configure("logic", logic)
-    node && await instance.configure("node", node)
-    return instance
-}
-
-export const add = async ({
+export const add = ({
     module = null,
     parent = null,
     css = null,
     logic = null,
     node = null
 } = {}) => {
-    if (!module || !parent) {
+    if (!module || !parent || !logic.id) {
+        console.trace("add error: lost parametres")
+        return null
+    }
+    const instance = prepare({ module, css, logic, node })
+    parent.appendChild(instance)
+    return instance
+}
+
+export const prepare = ({
+    module = null,
+    css = null,
+    logic = null,
+    node = null
+} = {}) => {
+    if (!module || !logic.id) {
         console.trace("add error: lost parametres")
         return null
     }
     const instance = new module.default()
-    parent.appendChild(instance)
-    css && await instance.configure("css", css)
-    logic && await instance.configure("logic", logic)
-    node && await instance.configure("node", node)
+    css && instance.configure("css", css)
+    logic && instance.configure("logic", logic)
+    node && instance.configure("node", node)
     return instance
 }
