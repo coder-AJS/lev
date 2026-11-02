@@ -1,3 +1,5 @@
+import * as terminal from "./terminal.js"
+
 export const add = ({
     module = null,
     parent = null,
@@ -25,8 +27,31 @@ export const prepare = ({
         return null
     }
     const instance = new module.default()
+    instance.configure("logic", logic)
     css && instance.configure("css", css)
-    logic && instance.configure("logic", logic)
     node && instance.configure("node", node)
     return instance
 }
+
+/* info */
+export const info = terminal.info("components", "fn", {
+    prepare: {
+        description: "create component instance and preload resources",
+        params: {
+            module: "required",
+            logic: "required",
+            css: "optional",
+            node: "optional"
+        }
+    },
+    add: {
+        description: "create component instance and inject on element",
+        params: {
+            module: "required",
+            parent: "required",
+            logic: "required",
+            css: "optional",
+            node: "optional"
+        },
+    }
+})

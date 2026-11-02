@@ -1,17 +1,10 @@
+import * as terminal from "./terminal.js"
+
 const onError = (info) => {
     console.trace("dom HELPER - parameters error")
     info()
     return null
 }
-
-/** return a new html element without dom's injection
-* @property {Object} options
-* @property {string} tag
-* @property {string} [className=null]
-* @property {string} [id=null]
-* @property {Object} [attributes=null]
-* @returns {HTMLElement|null}
-*/
 
 export const add = ({
     tag = null,
@@ -34,23 +27,12 @@ export const add = ({
     return element
 }
 
-
-/** adds a new html element directly to dom
-* @property {Object} options
-* @property {string} tag
-* @property {HTMLElement} [parent=document.body]
-* @property {string} [className=null]
-* @property {string} [id=null]
-* @property {Object} [attributes=null]
-* @returns {HTMLElement|null}
-*/
-
-export const addTo = ({
+export const inject = ({
     tag = null,
+    parent = document.body,
     id = null,
     className = null,
-    attributes = null,
-    parent = document.body
+    attributes = null
 } = {}) => {
     const info = () => console.table({ tag: "string", className: "string (optional)", id: "string (optional)", attributes: "Object (optional)" })
 
@@ -67,12 +49,12 @@ export const addTo = ({
 }
 
 /* DEPRECATED */
-export const addToDom = ({
+export const addTo = ({
     tag = null,
+    parent = document.body,
     id = null,
     className = null,
-    attributes = null,
-    parent = document.body
+    attributes = null
 } = {}) => {
     console.trace("DEPRECATED USE ADDTO")
     const info = () => console.table({ tag: "string", className: "string (optional)", id: "string (optional)", attributes: "Object (optional)" })
@@ -88,3 +70,26 @@ export const addToDom = ({
     parent.appendChild(newElement)
     return newElement
 }
+
+/* info */
+export const info = terminal.info("dom", "fn", {
+    add: {
+        description: "return a new html element without dom's injection",
+        params: {
+            tag: "required",
+            id: "optional",
+            className: "optional",
+            attributes: "optional"
+        }
+    },
+    inject: {
+        description: "adds a new html element directly to dom",
+        params: {
+            tag: "required",
+            parent: "default (body)",
+            id: "optional",
+            className: "optional",
+            attributes: "optional"
+        }
+    }
+})

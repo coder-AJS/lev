@@ -1,3 +1,5 @@
+import * as terminal from "./terminal.js"
+
 export const newReactive = () => {
     let object = {}
     let listenMap = {}
@@ -77,9 +79,10 @@ export const newReactive = () => {
         }
     }
 
-    object.getProps = () => Object.fromEntries(Object.entries(object).filter(([_, value]) => typeof value !== "function"))
+/*     object.getProps = () => Object.fromEntries(Object.entries(object).filter(([_, value]) => typeof value !== "function"))
+ */    object.props = () => ({ ...object })
 
-    object.getListeners = (prop = null) => {
+    object.listeners = (prop = null) => {
         if (prop !== null && !(prop in listenMap)) {
             console.error(`reactive.getListeners no exist: `, prop)
             return
@@ -95,3 +98,40 @@ export const newReactive = () => {
 
     return proxy
 }
+
+/* info */
+export const info = terminal.add("reactive", "method", {
+    add: {
+        description: "Adds a new reactive property with optional listeners",
+        params: {
+            name: "required",
+            value: "required",
+            listeners: "optional"
+        }
+    },
+    addTo: {
+        description: "Adds new listeners to an existing reactive property",
+        params: {
+            name: "required",
+            listeners: "required"
+        }
+    },
+    remove: {
+        description: "Removes specific listeners or clears all listeners for a property",
+        params: {
+            name: "required",
+            listeners: "optional",
+            all: "default (false)"
+        }
+    },
+    props: {
+        description: "Returns a plain object containing the reactive data properties",
+    },
+    listeners: {
+        description: "Retrieves listeners for a specific property or for all properties",
+        params: "prop (optional)"
+    },
+    destroy: {
+        description: "Cleans up the reactive instance, nullifies references, and revokes the proxy",
+    }
+})

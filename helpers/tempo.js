@@ -1,5 +1,15 @@
+import * as terminal from "./terminal.js"
+
+const onError = (info) => {
+    console.trace("tempo HELPER - parameters error")
+    info()
+    return null
+}
+
 export const getTempo = (element) => {
-    if (!element) return null
+    const info = () => console.table({ element: "HTMLElement | SVGElement" })
+    if (!element) return onError(info)
+
     const transicion = getComputedStyle(element).getPropertyValue("transition-duration") || "0s"
 
     if (transicion.includes("ms")) return parseFloat(transicion)
@@ -7,11 +17,30 @@ export const getTempo = (element) => {
 }
 
 export const sleep = async (ms) => {
-    if (!ms) return null
+    const info = () => console.table({ ms: "number" })
+    if (!ms) return onError(info)
+    
     await new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export const sleepTempo = async (element) => {
-    if (!element) return null
+    const info = () => console.table({ element: "HTMLElement | SVGElement" })
+    if (!element) return onError(info)
+    
     await sleep(getTempo(element))
 }
+
+export const info = terminal.add("tempo", "fn", {
+    getTempo: {
+        description: "Gets the transition duration of an element in milliseconds",
+        params: "element (required)"
+    },
+    sleep: {
+        description: "Pauses execution for a specified number of milliseconds",
+        params: "ms (required)"
+    },
+    sleepTempo: {
+        description: "Pauses execution based on the transition duration of an element",
+        params: "element (required)"
+    }
+})

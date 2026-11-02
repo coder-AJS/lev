@@ -1,3 +1,5 @@
+import * as h from "./../helpers/terminal.js"
+
 export const init = async (box) => {
     const compMod = await import("../components/avancedProgressCard001.js")
     const component = box.appendChild(new compMod.default())
@@ -21,4 +23,5 @@ export const init = async (box) => {
 
     component.addToNode({ html: "a", style: "a" })
 
+    console.log(h.info())
 }
