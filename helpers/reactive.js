@@ -42,6 +42,7 @@ export const newReactive = () => {
 
         listenMap[name] = listeners ? normalizeArray(listeners) : []
         object[name] = value
+        return proxy
     }
 
     object.addTo = ({ name = null, listeners = null } = {}) => {
