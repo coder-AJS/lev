@@ -34,25 +34,3 @@ export const info = terminal.add("css", "fn", {
         params: ["prop (required)", "value (required)", "element (required)"]
     }
 })
-
-/* deprecared */
-export const setVar = (prop, value, element) => {
-    console.trace("DEPRECATED use set")
-    if (!element || prop == null || value == null) return onError()
-    const propName = prop.startsWith("--") ? prop : `--${prop}`
-    element.style.setProperty(propName, value)
-}
-
-export const getVar = (prop, element = null) => {
-    console.trace("DEPRECATED use get")
-    if (!prop) return onError()
-    const propName = prop.startsWith("--") ? prop : `--${prop}`
-    const target = element || document.documentElement
-    const value = getComputedStyle(target).getPropertyValue(propName).trim()
-
-    if (!value) {
-        console.trace(propName, "...not exist in element")
-        return null
-    }
-    return value
-}

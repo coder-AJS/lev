@@ -34,7 +34,7 @@ export const prepare = ({
 }
 
 /* info */
-export const info = terminal.info("components", "fn", {
+export const info = terminal.add("components", "fn", {
     prepare: {
         description: "create component instance and preload resources",
         params: {

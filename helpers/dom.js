@@ -48,31 +48,8 @@ export const inject = ({
     return newElement
 }
 
-/* DEPRECATED */
-export const addTo = ({
-    tag = null,
-    parent = document.body,
-    id = null,
-    className = null,
-    attributes = null
-} = {}) => {
-    console.trace("DEPRECATED USE ADDTO")
-    const info = () => console.table({ tag: "string", className: "string (optional)", id: "string (optional)", attributes: "Object (optional)" })
-
-    const newElement = add({
-        "tag": tag,
-        "id": id,
-        "className": className,
-        "attributes": attributes
-    })
-
-    if (!newElement) return onError(info)
-    parent.appendChild(newElement)
-    return newElement
-}
-
 /* info */
-export const info = terminal.info("dom", "fn", {
+export const info = terminal.add("dom", "fn", {
     add: {
         description: "return a new html element without dom's injection",
         params: {
