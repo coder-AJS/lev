@@ -8,7 +8,7 @@ const onError = () => {
 export const get = (prop, element = null) => {
     if (!prop) return onError()
     const propName = prop.startsWith("--") ? prop : `--${prop}`
-    const target = element || document.documentElement
+    const target = element || document.body
     const value = getComputedStyle(target).getPropertyValue(propName).trim()
 
     if (!value) {
