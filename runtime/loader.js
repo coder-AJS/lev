@@ -1,12 +1,12 @@
 const isLocal = window.location.hostname === "127.0.0.1"
 const base = isLocal ? "" : "/cv"
 
-console.log(base)
+console.log("base:", base)
 
 export const get = async ({ mode = null, items = null } = {}) => {
     let state = true
     const modes = {
-        helpers: base + "/config/helpers.js"
+        helpers: base + "./../config/helpers.js"
     }
 
     if (!(mode in modes)) {
