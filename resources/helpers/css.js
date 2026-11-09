@@ -5,7 +5,7 @@ const onError = () => {
     return null
 }
 
-export const get = (prop, element = null) => {
+export const getVar = (prop, element = null) => {
     if (!prop) return onError()
     const propName = prop.startsWith("--") ? prop : `--${prop}`
     const target = element || document.body
@@ -18,7 +18,7 @@ export const get = (prop, element = null) => {
     return value
 }
 
-export const set = (prop, value, element) => {
+export const setVar = (prop, value, element) => {
     if (!element || prop == null || value == null) return onError()
     const propName = prop.startsWith("--") ? prop : `--${prop}`
     element.style.setProperty(propName, value)
