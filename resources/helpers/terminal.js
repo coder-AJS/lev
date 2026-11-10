@@ -1,5 +1,4 @@
 export const add = (module, type, info) => () => {
-    console.trace()
     if (type !== "fn" && type !== "method") {
         console.trace("helper error: type must be (fn or method)")
         return
