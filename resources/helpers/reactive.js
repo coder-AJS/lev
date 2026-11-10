@@ -80,8 +80,8 @@ export const newReactive = () => {
         }
     }
 
-/*     object.getProps = () => Object.fromEntries(Object.entries(object).filter(([_, value]) => typeof value !== "function"))
- */    object.props = () => ({ ...object })
+    object.getProps = () => Object.fromEntries(Object.entries(object).filter(([_, value]) => typeof value !== "function"))
+    object.props = () => ({ ...object })
 
     object.listeners = (prop = null) => {
         if (prop !== null && !(prop in listenMap)) {
@@ -101,7 +101,7 @@ export const newReactive = () => {
 }
 
 /* info */
-export const info = terminal.add("reactive", "method", {
+export const info = terminal.add("newReactive", "method", {
     add: {
         description: "Adds a new reactive property with optional listeners",
         params: {

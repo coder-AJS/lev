@@ -1,7 +1,7 @@
 const isLocal = window.location.hostname === "127.0.0.1"
 const base = isLocal ? "" : "/cv"
 
-console.log("base:", base)
+if (base === "") console.log("level base:", base)
 
 export const get = async ({ mode = null, items = null } = {}) => {
     let state = true
@@ -31,8 +31,8 @@ export const get = async ({ mode = null, items = null } = {}) => {
             }
             itemsList[item] = moduleConf[item]
         }
-    } 
-        
+    }
+
     if (!items) itemsList = moduleConf
 
     if (!state) return
