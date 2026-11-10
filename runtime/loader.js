@@ -1,7 +1,7 @@
-const isLocal = window.location.hostname === "127.0.0.1"
-const base = isLocal ? "" : "/cv"
+const isLocal = window.location.hostname === "localhost" || "127.0.0.1"
+const base = isLocal ? "" : "/lev"
 
-if (base === "") console.log("level base:", base)
+if (base === "") console.log("level base: local")
 
 export const get = async ({ mode = null, items = null } = {}) => {
     let state = true
