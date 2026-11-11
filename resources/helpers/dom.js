@@ -51,7 +51,10 @@ export const inject = ({
 /* info */
 export const info = terminal.add("dom", "fn", {
     add: {
-        description: "return a new html element without dom's injection",
+        description: [
+            "🇪🇸 Devuelve el elemento sin inyectarlo en el dom.",
+            "🇬🇧 Return new element without dom injection."
+        ],
         params: {
             tag: "required",
             id: "optional",
@@ -60,7 +63,10 @@ export const info = terminal.add("dom", "fn", {
         }
     },
     inject: {
-        description: "adds a new html element directly to dom",
+        description: [
+            "🇪🇸 Devuelve el elemento inyectado en su contenedor.",
+            "🇬🇧 Return the injected element into container."
+        ],
         params: {
             tag: "required",
             parent: "default (body)",

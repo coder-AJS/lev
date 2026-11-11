@@ -32,15 +32,24 @@ export const sleepTempo = async (element) => {
 
 export const info = terminal.add("tempo", "fn", {
     getTempo: {
-        description: "Gets the transition duration of an element in milliseconds",
+        description: [
+            "🇪🇸 Devuelve la duracion de transicion de un elemento en ms.",
+            "🇬🇧 Return transition duration of an element in ms."
+        ],
         params: "element (required)"
     },
     sleep: {
-        description: "Pauses execution for a specified number of milliseconds",
+        description: [
+            "🇪🇸 Pausa la ejecucion durante X ms.",
+            "🇬🇧 Pauses execution X ms."
+        ],
         params: "ms (required)"
     },
     sleepTempo: {
-        description: "Pauses execution based on the transition duration of an element",
+        description: [
+            "🇪🇸 Pausa la ejecucion durante el tempo de la transicion de un elemento.",
+            "🇬🇧 Pauses execution based on the transition duration of an element."
+        ],
         params: "element (required)"
     }
 })

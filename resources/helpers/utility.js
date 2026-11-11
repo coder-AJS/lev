@@ -11,7 +11,10 @@ export const randomize =  ({
 
 export const info = terminal.add("utility", "fn", {
     randomize: {
-        description: "Generates a random integer between a given minimum and maximum value.",
+        description: [
+            "🇪🇸 Devuelve un numero entero entre min y max.",
+            "🇬🇧 Return a random integer between min and max."
+        ],
         params: {
             min: "required",
             max: "required"

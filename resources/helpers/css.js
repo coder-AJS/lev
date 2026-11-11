@@ -19,18 +19,32 @@ export const getVar = (prop, element = null) => {
 }
 
 export const setVar = (prop, value, element) => {
-    if (!element || prop == null || value == null) return onError()
+    if (prop == null || value == null) return onError()
     const propName = prop.startsWith("--") ? prop : `--${prop}`
-    element.style.setProperty(propName, value)
+    const target = element || document.body
+    target.style.setProperty(propName, value)
 }
 
 export const info = terminal.add("css", "fn", {
-    get: {
-        description: "Gets the value of a CSS custom property (variable)",
-        params: ["prop (required)", "element (optional)"]
+    getVar: {
+        description: [
+            "🇪🇸 Devuelve el valor de la variable css.",
+            "🇬🇧 Gets the value of a CSS var.",
+        ],
+        params: [
+            "prop (required)",
+            "element (default body)"
+        ]
     },
-    set: {
-        description: "Sets the value of a CSS custom property (variable)",
-        params: ["prop (required)", "value (required)", "element (required)"]
+    setVar: {
+        description: [
+            "🇪🇸 Actualiza el valor de la variable css.",
+            "🇬🇧 Sets the value of a CSS var."
+        ],
+        params: [
+            "prop (required)",
+            "value (required)",
+            "element (default body)"
+        ]
     }
 })

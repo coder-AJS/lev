@@ -36,7 +36,10 @@ export const prepare = ({
 /* info */
 export const info = terminal.add("components", "fn", {
     prepare: {
-        description: "create component instance and preload resources",
+        description: [
+            "🇪🇸 Instancia el componente y pregarga los recursos",
+            "🇬🇧 Create component instance and preload resources"
+        ],
         params: {
             module: "required",
             logic: "required",
@@ -45,7 +48,10 @@ export const info = terminal.add("components", "fn", {
         }
     },
     add: {
-        description: "create component instance and inject on element",
+        description: [
+            "🇪🇸 Instancia el componente y lo inyecta en su elemento padre.",
+            "🇬🇧 Create component instance and inject on parent element."
+        ],
         params: {
             module: "required",
             parent: "required",

@@ -10,6 +10,7 @@ const init = async () => {
     ])
 
     console.log(helpers)
+    helpers.terminal.info()
 }
 
 init()

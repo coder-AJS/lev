@@ -1,7 +1,7 @@
 import * as terminal from "./terminal.js"
 
 export const paths = async (obj) => {
-    if (!obj || typeof(obj) !== "object") {
+    if (!obj || typeof (obj) !== "object") {
         console.error("HELPER RESOLVE PATHS: parameters error")
         info()
         return null
@@ -29,8 +29,10 @@ export const paths = async (obj) => {
 
 export const info = terminal.add("paths", "fn", {
     blockScroll: {
-        description: `🇪🇸 Reemplaza las rutas del objeto con el modulo importado\n
-           🇬🇧 Replace object paths with imported modules`,
+        description: [
+            "🇪🇸 Reemplaza las rutas del objeto con el modulo importado.",
+            "🇬🇧 Replace object paths with imported modules."
+        ],
         params: "object (required)"
     }
 })

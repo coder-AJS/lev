@@ -10,7 +10,10 @@ export const blockScroll = (element, boolean) => {
 
 export const info = terminal.add("viewPort", "fn", {
     blockScroll: {
-        description: "Blocks or unblocks the scroll of a specified element",
+        description: [
+            "🇪🇸 Bloquea o desbloquea el scroll de un elemento.",
+            "🇬🇧 Blocks or unblocks the scroll of an element."
+        ],
         params: ["element (required)", "boolean (required)"]
     }
 })

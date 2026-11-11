@@ -15,27 +15,27 @@ export const add = (module, type, info) => () => {
 
         index > 0 && (sections[0] += "\n\n")
 
-        sections[0] +=
-            `${icon} %c${name}%c (${type})\n\n` +
-            `• ${value.description}\n`
+        sections[0] += `${icon} %c${name}%c (${type})\n\n`
+        sections[0] += "• Description\n\n"
+        value.description.forEach(item => sections[0] += `  ${item}\n`)
 
         if (value.params) {
-            sections[0] += `• parameters:\n\n`
+            sections[0] += `\n• Parameters:\n\n`
 
-            if (typeof value.params === "string") sections[0] += `    ${value.params}\n`
+            if (typeof value.params === "string") sections[0] += `  ${value.params}\n`
 
-            if (Array.isArray(value.params)) value.params.forEach(item => sections[0] += `    ${item}\n`)
+            if (Array.isArray(value.params)) value.params.forEach(item => sections[0] += `  ${item}\n`)
 
             if (typeof value.params === "object" && !Array.isArray(value.params))
                 Object.entries(value.params).forEach(([key, value]) => {
-                    sections[0] += `    ${key}:`
+                    sections[0] += `  ${key}:`
                     for (let i = 0; i < 16 - key.length; i++) { sections[0] += " " }
                     sections[0] += `${value}\n`
                 })
         }
 
         if (value.params && typeof value.params === "object" && !Array.isArray(value.params)) {
-            sections[0] += `\ndestructured: %ctrue%c\n`
+            sections[0] += `\n• Destructured: %ctrue%c\n`
             colors++
         }
 
@@ -50,7 +50,10 @@ export const add = (module, type, info) => () => {
 
 export const info = add("terminal", "fn", {
     add: {
-        description: "Generates clean, formatted console documentation for modules.",
+        description: [
+            "🇪🇸 Genera documentacion en consola para modulos.",
+            "🇬🇧 Generates console documentation for modules."
+        ],
         params: ["module (required)", "type (required)", "info (required)"]
     }
 })
