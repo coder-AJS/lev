@@ -17,7 +17,7 @@ export const paths = async (obj) => {
                 temp[key] = module.default || module
             } catch (error) {
                 errors[key] = value
-                console.error("HELPER RESOLVE PATHS:", value)
+                console.error("HELPER RESOLVE PATHS:", value, "\nerror: ", error)
             }
         })
     )
