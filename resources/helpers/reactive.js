@@ -101,7 +101,7 @@ export const newReactive = () => {
 }
 
 /* info */
-export const info = terminal.add("newReactive", "method", {
+export const info = terminal.helper("newReactive", "method", {
     add: {
         description: [
             "🇪🇸 Añade una nueva prop reactiva con listeners opcionales.",

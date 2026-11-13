@@ -1,44 +1,53 @@
 import * as terminal from "./terminal.js"
 
-export const paths = async (obj) => {
+export const imports = async (obj) => {
     if (!obj || typeof (obj) !== "object") {
         console.error("HELPER RESOLVE PATHS: parameters error")
         info()
         return null
     }
 
-    let errors = []
+    const resolveImports = async (path) => {
+        try {
+            const module = await import(path)
+            return { module: module.default || module, error: null }
+        } catch (error) {
+            return { module: null, error: error }
+        }
+    }
 
-    const resolvePaths = async (object) => {
-        const temp = {}
+    const recursive = async (object, callback) => {
+        if (!callback) {
+            console.trace("HELPER RECURSIVE ERROR: no callback")
+            return
+        }
+
+        const errors = {}
 
         await Promise.all(
             Object.entries(object).map(async ([key, value]) => {
                 if (typeof (value) === "object" && value) {
-                    temp[key] = await resolvePaths(value)
+                    const error = await recursive(value, callback)
+                    if (Object.keys(error).length) errors[key] = error
                     return
                 }
 
-                try {
-                    const module = await import(value)
-                    temp[key] = module.default || module
-                } catch (error) {
-                    errors.push({ key, value, error })
-                    temp[key] = value
-                }
+                const result = await callback(value)
+
+                if (result.module) object[key] = result.module
+                if (result.error) errors[key] = result.error
             })
         )
-        return temp
+        return errors
     }
 
-    const objectResolved = await resolvePaths(obj)
-    if (errors.length) console.error("HELPER RESOLVE PATHS:", errors)
-    Object.assign(obj, objectResolved)
+    const errors = await recursive(obj, resolveImports)
+    if (Object.keys(errors).length) terminal.objectError("resolver helper", errors)
     return
 }
 
-export const info = terminal.add("paths", "fn", {
-    blockScroll: {
+export const info = terminal.helper("resolver", "fn", {
+    paths: {
         description: [
             "🇪🇸 Reemplaza las rutas del objeto con el modulo importado.",
             "🇬🇧 Replace object paths with imported modules."

@@ -1,4 +1,4 @@
-export const add = (module, type, info) => () => {
+export const helper = (module, type, info) => () => {
     if (type !== "fn" && type !== "method") {
         console.trace("helper error: type must be (fn or method)")
         return
@@ -48,8 +48,24 @@ export const add = (module, type, info) => () => {
     console.info(...sections, "\n")
 }
 
-export const info = add("terminal", "fn", {
-    add: {
+export const objectError = (module, obj) => {
+    let sections = [`${module.toUpperCase()} ERROR\n\n--------------------------------------------------------\n\n\n`]
+
+    const deepRecursive = () => {
+        Object.entries(obj).forEach(([key, value]) => {
+            console.log(key, value)
+        })
+
+    }
+
+    deepRecursive(obj)
+
+/*     console.info(...sections)
+    console.log(obj)
+ */}
+
+export const info = helper("terminal", "fn", {
+    helper: {
         description: [
             "🇪🇸 Genera documentacion en consola para modulos.",
             "🇬🇧 Generates console documentation for modules."

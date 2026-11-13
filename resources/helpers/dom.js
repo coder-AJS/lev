@@ -49,7 +49,7 @@ export const inject = ({
 }
 
 /* info */
-export const info = terminal.add("dom", "fn", {
+export const info = terminal.helper("dom", "fn", {
     add: {
         description: [
             "🇪🇸 Devuelve el elemento sin inyectarlo en el dom.",

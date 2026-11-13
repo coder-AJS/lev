@@ -25,7 +25,7 @@ export const setVar = (prop, value, element) => {
     target.style.setProperty(propName, value)
 }
 
-export const info = terminal.add("css", "fn", {
+export const info = terminal.helper("css", "fn", {
     getVar: {
         description: [
             "🇪🇸 Devuelve el valor de la variable css.",

@@ -8,7 +8,7 @@ export const blockScroll = (element, boolean) => {
     element.style.overflow = boolean ? "hidden" : ""
 }
 
-export const info = terminal.add("viewPort", "fn", {
+export const info = terminal.helper("viewPort", "fn", {
     blockScroll: {
         description: [
             "🇪🇸 Bloquea o desbloquea el scroll de un elemento.",

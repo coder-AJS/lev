@@ -16,12 +16,14 @@ const init = async () => {
     const obj = {
         nivel_1_0: base + "/resources/helpers/css.js",
         nivel_1_1: {
-            nivel_2_0: base + "/resources/helpers/cdss.js"
+            nivel_2_0: base + "/resources/helpers/cdss.js",
+            nivel_3: {
+                nivel_3_1: base + "/vfgf"
+            }
         }
     }
 
-    await helpers.resolver.paths(obj)
-    console.log(obj)
+    await helpers.resolver.imports(obj)
 }
 
 init()

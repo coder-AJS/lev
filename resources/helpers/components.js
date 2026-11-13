@@ -34,7 +34,7 @@ export const prepare = ({
 }
 
 /* info */
-export const info = terminal.add("components", "fn", {
+export const info = terminal.helper("components", "fn", {
     prepare: {
         description: [
             "🇪🇸 Instancia el componente y pregarga los recursos",

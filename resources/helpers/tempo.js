@@ -30,7 +30,7 @@ export const sleepTempo = async (element) => {
     await sleep(getTempo(element))
 }
 
-export const info = terminal.add("tempo", "fn", {
+export const info = terminal.helper("tempo", "fn", {
     getTempo: {
         description: [
             "🇪🇸 Devuelve la duracion de transicion de un elemento en ms.",
