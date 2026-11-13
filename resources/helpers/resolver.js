@@ -7,23 +7,33 @@ export const paths = async (obj) => {
         return null
     }
 
-    let errors = {}
-    const temp = {}
+    let errors = []
 
-    await Promise.all(
-        Object.entries(obj).map(async ([key, value]) => {
-            try {
-                const module = await import(value)
-                temp[key] = module.default || module
-            } catch (error) {
-                errors[key] = value
-                console.error("HELPER RESOLVE PATHS:", value, "\nerror: ", error)
-            }
-        })
-    )
+    const resolvePaths = async (object) => {
+        const temp = {}
 
-    if (Object.keys(errors).length) return null
-    Object.assign(obj, temp)
+        await Promise.all(
+            Object.entries(object).map(async ([key, value]) => {
+                if (typeof (value) === "object" && value) {
+                    temp[key] = await resolvePaths(value)
+                    return
+                }
+
+                try {
+                    const module = await import(value)
+                    temp[key] = module.default || module
+                } catch (error) {
+                    errors.push({ key, value, error })
+                    temp[key] = value
+                }
+            })
+        )
+        return temp
+    }
+
+    const objectResolved = await resolvePaths(obj)
+    if (errors.length) console.error("HELPER RESOLVE PATHS:", errors)
+    Object.assign(obj, objectResolved)
     return
 }
 

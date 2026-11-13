@@ -11,6 +11,17 @@ const init = async () => {
 
     console.log(helpers)
     helpers.terminal.info()
+
+
+    const obj = {
+        nivel_1_0: base + "/resources/helpers/css.js",
+        nivel_1_1: {
+            nivel_2_0: base + "/resources/helpers/cdss.js"
+        }
+    }
+
+    await helpers.resolver.paths(obj)
+    console.log(obj)
 }
 
 init()
