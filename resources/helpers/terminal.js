@@ -1,3 +1,5 @@
+import * as resolver from "./resolver.js"
+
 export const helper = (module, type, info) => () => {
     if (type !== "fn" && type !== "method") {
         console.trace("helper error: type must be (fn or method)")
@@ -45,24 +47,20 @@ export const helper = (module, type, info) => () => {
             colors--
         } while (colors !== 0)
     })
-    console.info(...sections, "\n")
+    console.trace(...sections, "\n")
 }
 
 export const objectError = (module, obj) => {
+    console.log(module, obj)
     let sections = [`${module.toUpperCase()} ERROR\n\n--------------------------------------------------------\n\n\n`]
 
-    const deepRecursive = () => {
-        Object.entries(obj).forEach(([key, value]) => {
-            console.log(key, value)
-        })
-
+    const addText = (text) => {
+        console.log("d", text)
     }
 
-    deepRecursive(obj)
-
-/*     console.info(...sections)
-    console.log(obj)
- */}
+    console.log(resolver)
+    resolver.recursive(obj, addText)
+}
 
 export const info = helper("terminal", "fn", {
     helper: {
