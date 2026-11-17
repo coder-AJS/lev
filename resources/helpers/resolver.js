@@ -7,6 +7,7 @@ const resolveImports = async (key, value, object) => {
         object[key] = module.default || module
         return true
     } catch (error) {
+        terminal.reportError("HELPER RESOLVE IMPORTS", value)
         object[key] = null
         return false
     }
@@ -14,7 +15,7 @@ const resolveImports = async (key, value, object) => {
 
 export const imports = async (obj) => {
     if (!obj || typeof (obj) !== "object") {
-        console.error("HELPER RESOLVE PATHS: parameters error")
+        terminal.reportError("HELPER RESOLVE IMPORTS PARAMETERS", obj)
         info()
         return null
     }

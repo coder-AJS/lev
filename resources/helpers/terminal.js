@@ -71,3 +71,22 @@ export const info = helper("terminal", "fn", {
         params: ["module (required)", "type (required)", "info (required)"]
     }
 })
+
+export const reportError = (log, error) => {
+    console.groupCollapsed(
+        `%c[ERROR] ${log}`,
+        'color: rgb(252, 75, 75); font-weight: bold; font-size: 12px;'
+    )
+    console.error(error)
+    console.groupEnd()
+}
+
+export const traceError = (log, error) => {
+    console.groupCollapsed(
+        `%c[ERROR] ${log}`,
+        'color: rgb(252, 75, 75); font-weight: bold; font-size: 12px;'
+    )
+    console.error(error)
+    console.trace()
+    console.groupEnd()
+}
