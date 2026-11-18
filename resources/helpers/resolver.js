@@ -21,7 +21,6 @@ export const imports = async (obj) => {
     }
 
     const errors = await objects.recursive(obj, resolveImports)
-    console.log(errors)
     return
 }
 

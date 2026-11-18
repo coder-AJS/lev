@@ -11,19 +11,22 @@ export const add = ({
     id = null,
     className = null,
     attributes = null,
+    content = null
 } = {}) => {
-    const info = () => console.table({ tag: "string", className: "string (optional)", id: "string (optional)", attributes: "Object (optional)" })
+    const info = () => console.table({ tag: "string", className: "string", id: "string", attributes: "Object" })
     let parsError = false
 
     if (!tag) parsError = true
     if (id && typeof id !== "string") parsError = true
     if (attributes && typeof attributes !== "object") parsError = true
+    if (className && typeof className !== "string") parsError = true
     if (parsError) return onError(info)
 
     const element = document.createElement(tag)
-    className && className.split(" ").forEach(item => element.classList.add(item))
-    id && (element.id = id)
-    attributes && Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value))
+    if (className) className.split(" ").forEach(item => element.classList.add(item))
+    if (id) element.id = id
+    if (attributes) Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value))
+    if (content) element.textContent = content
     return element
 }
 
@@ -32,15 +35,17 @@ export const inject = ({
     parent = document.body,
     id = null,
     className = null,
-    attributes = null
+    attributes = null,
+    content = null
 } = {}) => {
-    const info = () => console.table({ tag: "string", className: "string (optional)", id: "string (optional)", attributes: "Object (optional)" })
+    const info = () => console.table({ tag: "string", className: "string", id: "string", attributes: "Object" })
 
     const newElement = add({
-        "tag": tag,
-        "id": id,
-        "className": className,
-        "attributes": attributes
+        'tag': tag,
+        'id': id,
+        'className': className,
+        'attributes': attributes,
+        'content': content
     })
 
     if (!newElement) return onError(info)
@@ -59,7 +64,8 @@ export const info = terminal.helper("dom", "fn", {
             tag: "required",
             id: "optional",
             className: "optional",
-            attributes: "optional"
+            attributes: "optional",
+            content: "optional"
         }
     },
     inject: {
@@ -72,7 +78,8 @@ export const info = terminal.helper("dom", "fn", {
             parent: "default (body)",
             id: "optional",
             className: "optional",
-            attributes: "optional"
+            attributes: "optional",
+            content: "optional"
         }
     }
 })
