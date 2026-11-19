@@ -1,3 +1,5 @@
+import * as terminal from "./terminal.js"
+
 export const recursive = async (object, callback) => {
     if (!callback) {
         console.trace("HELPER RECURSIVE ERROR: no callback")
@@ -21,3 +23,5 @@ export const recursive = async (object, callback) => {
     )
     return errors
 }
+
+export const info = terminal.info()

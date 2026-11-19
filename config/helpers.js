@@ -1,7 +1,8 @@
 export default {
-    component: "./../resources/helpers/components.js",
+    component: "./../resources/helpers/component.js",
     css: "./../resources/helpers/css.js",
     dom: "./../resources/helpers/dom.js",
+    object: "./../resources/helpers/object.js",
     reactive: "./../resources/helpers/reactive.js",
     resolver: "./../resources/helpers/resolver.js",
     tempo: "./../resources/helpers/tempo.js",

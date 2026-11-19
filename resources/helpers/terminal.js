@@ -1,5 +1,3 @@
-import * as resolver from "./resolver.js"
-
 export const helper = (module, type, info) => () => {
     if (type !== "fn" && type !== "method") {
         console.trace("helper error: type must be (fn or method)")
@@ -50,16 +48,16 @@ export const helper = (module, type, info) => () => {
     console.trace(...sections, "\n")
 }
 
-export const objectError = (module, obj) => {
+export const objectError = async (module, obj) => {
     console.log(module, obj)
     let sections = [`${module.toUpperCase()} ERROR\n\n--------------------------------------------------------\n\n\n`]
 
     const addText = (text) => {
-        console.log("d", text)
+        console.log(text)
     }
 
-    console.log(resolver)
-    resolver.recursive(obj, addText)
+    const { recursive } = await import("./object.js")
+    recursive(obj, addText)
 }
 
 export const info = helper("terminal", "fn", {

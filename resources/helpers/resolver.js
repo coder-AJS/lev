@@ -1,5 +1,5 @@
 import * as terminal from "./terminal.js"
-import * as objects from "./objects.js"
+import * as object from "./object.js"
 
 const resolveImports = async (key, value, object) => {
     try {
@@ -20,7 +20,7 @@ export const imports = async (obj) => {
         return null
     }
 
-    const errors = await objects.recursive(obj, resolveImports)
+    const errors = await object.recursive(obj, resolveImports)
     return
 }
 
