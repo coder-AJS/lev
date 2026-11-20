@@ -1,4 +1,5 @@
 export default {
+    animation: "./../resources/helpers/animation.js",
     component: "./../resources/helpers/component.js",
     css: "./../resources/helpers/css.js",
     dom: "./../resources/helpers/dom.js",

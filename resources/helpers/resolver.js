@@ -24,12 +24,16 @@ export const imports = async (obj) => {
     return
 }
 
-export const info = terminal.helper("resolver", "fn", {
-    imports: {
-        description: [
-            "🇪🇸 Reemplaza las rutas del objeto con el modulo importado.",
-            "🇬🇧 Replace object paths with imported modules."
-        ],
-        params: "object (required)"
+export const info = terminal.description({
+    module: "resolver",
+    type: "fn",
+    info: {
+        imports: {
+            description: [
+                "🇪🇸 Reemplaza las rutas del objeto con el modulo importado.",
+                "🇬🇧 Replace object paths with imported modules."
+            ],
+            params: "object (required)"
+        }
     }
 })

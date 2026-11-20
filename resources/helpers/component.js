@@ -34,30 +34,33 @@ export const prepare = ({
 }
 
 /* info */
-export const info = terminal.helper("components", "fn", {
-    prepare: {
-        description: [
-            "🇪🇸 Instancia el componente y pregarga los recursos",
-            "🇬🇧 Create component instance and preload resources"
-        ],
-        params: {
-            module: "required",
-            logic: "required",
-            css: "optional",
-            node: "optional"
-        }
-    },
-    add: {
-        description: [
-            "🇪🇸 Instancia el componente y lo inyecta en su elemento padre.",
-            "🇬🇧 Create component instance and inject on parent element."
-        ],
-        params: {
-            module: "required",
-            parent: "required",
-            logic: "required",
-            css: "optional",
-            node: "optional"
+export const info = terminal.description({
+    module: "component helper",
+    info: {
+        prepare: {
+            description: [
+                "🇪🇸 Instancia el componente y pregarga los recursos",
+                "🇬🇧 Create component instance and preload resources"
+            ],
+            params: {
+                module: "required",
+                logic: "required",
+                css: "optional",
+                node: "optional"
+            }
         },
+        add: {
+            description: [
+                "🇪🇸 Instancia el componente y lo inyecta en su elemento padre.",
+                "🇬🇧 Create component instance and inject on parent element."
+            ],
+            params: {
+                module: "required",
+                parent: "required",
+                logic: "required",
+                css: "optional",
+                node: "optional"
+            }
+        }
     }
 })

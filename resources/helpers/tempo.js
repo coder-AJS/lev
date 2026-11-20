@@ -19,37 +19,41 @@ export const getTempo = (element) => {
 export const sleep = async (ms) => {
     const info = () => console.table({ ms: "number" })
     if (!ms) return onError(info)
-    
+
     await new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export const sleepTempo = async (element) => {
     const info = () => console.table({ element: "HTMLElement | SVGElement" })
     if (!element) return onError(info)
-    
+
     await sleep(getTempo(element))
 }
 
-export const info = terminal.helper("tempo", "fn", {
-    getTempo: {
-        description: [
-            "🇪🇸 Devuelve la duracion de transicion de un elemento en ms.",
-            "🇬🇧 Return transition duration of an element in ms."
-        ],
-        params: "element (required)"
-    },
-    sleep: {
-        description: [
-            "🇪🇸 Pausa la ejecucion durante X ms.",
-            "🇬🇧 Pauses execution X ms."
-        ],
-        params: "ms (required)"
-    },
-    sleepTempo: {
-        description: [
-            "🇪🇸 Pausa la ejecucion durante el tempo de la transicion de un elemento.",
-            "🇬🇧 Pauses execution based on the transition duration of an element."
-        ],
-        params: "element (required)"
+export const info = terminal.description({
+    module: "tempo helper",
+    type: "fn",
+    info: {
+        getTempo: {
+            description: [
+                "🇪🇸 Devuelve la duracion de transicion de un elemento en ms.",
+                "🇬🇧 Return transition duration of an element in ms."
+            ],
+            params: "element (required)"
+        },
+        sleep: {
+            description: [
+                "🇪🇸 Pausa la ejecucion durante X ms.",
+                "🇬🇧 Pauses execution X ms."
+            ],
+            params: "ms (required)"
+        },
+        sleepTempo: {
+            description: [
+                "🇪🇸 Pausa la ejecucion durante el tempo de la transicion de un elemento.",
+                "🇬🇧 Pauses execution based on the transition duration of an element."
+            ],
+            params: "element (required)"
+        }
     }
 })

@@ -54,32 +54,36 @@ export const inject = ({
 }
 
 /* info */
-export const info = terminal.helper("dom", "fn", {
-    add: {
-        description: [
-            "🇪🇸 Devuelve el elemento sin inyectarlo en el dom.",
-            "🇬🇧 Return new element without dom injection."
-        ],
-        params: {
-            tag: "required",
-            id: "optional",
-            className: "optional",
-            attributes: "optional",
-            content: "optional"
-        }
-    },
-    inject: {
-        description: [
-            "🇪🇸 Devuelve el elemento inyectado en su contenedor.",
-            "🇬🇧 Return the injected element into container."
-        ],
-        params: {
-            tag: "required",
-            parent: "default (body)",
-            id: "optional",
-            className: "optional",
-            attributes: "optional",
-            content: "optional"
+export const info = terminal.description({
+    module: "dom helper",
+    type: "fn",
+    info: {
+        add: {
+            description: [
+                "🇪🇸 Devuelve el elemento sin inyectarlo en el dom.",
+                "🇬🇧 Return new element without dom injection."
+            ],
+            params: {
+                tag: "required",
+                id: "optional",
+                className: "optional",
+                attributes: "optional",
+                content: "optional"
+            }
+        },
+        inject: {
+            description: [
+                "🇪🇸 Devuelve el elemento inyectado en su contenedor.",
+                "🇬🇧 Return the injected element into container."
+            ],
+            params: {
+                tag: "required",
+                parent: "default (body)",
+                id: "optional",
+                className: "optional",
+                attributes: "optional",
+                content: "optional"
+            }
         }
     }
 })

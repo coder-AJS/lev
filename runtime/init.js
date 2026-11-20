@@ -6,10 +6,12 @@ const loader = await import(base + "/runtime/loader.js")
 
 const init = async () => {
     const [helpers] = await Promise.all([
-        loader.get({ mode: "helpers", items: null})
+        loader.get({ mode: "helpers", items: ["css", "reactive"]})
     ])
 
     console.log(helpers)
+    helpers.css.info()
+    helpers.reactive.info()
 }
 
 init()

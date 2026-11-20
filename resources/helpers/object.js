@@ -18,10 +18,26 @@ export const recursive = async (object, callback) => {
 
             const result = await callback(key, value, object)
             if (!result) errors[key] = false
-            
+
         })
     )
     return errors
 }
 
-export const info = terminal.info()
+export const realType = (item) => {
+    return Object.prototype.toString.call(item).slice(8, -1).toLowerCase()
+}
+
+export const info = () => terminal.description({
+    module: "object helper",
+    type: "fn",
+    info: {
+        recursive: {
+            description: [
+                "🇪🇸 Recorre recursivamente un objeto, ejecutando el callback por cada valor real.",
+                "🇬🇧 Recursively traverses an object, running the callback for each actual value."
+            ],
+            params: ["object (required)", "callback (required)"]
+        }
+    }
+})

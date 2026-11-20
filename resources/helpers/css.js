@@ -1,4 +1,5 @@
 import * as terminal from "./terminal.js"
+console.log(terminal)
 
 const onError = () => {
     console.trace("helper error: invalid parameters")
@@ -25,26 +26,35 @@ export const setVar = (prop, value, element) => {
     target.style.setProperty(propName, value)
 }
 
-export const info = terminal.helper("css", "fn", {
-    getVar: {
-        description: [
-            "🇪🇸 Devuelve el valor de la variable css.",
-            "🇬🇧 Gets the value of a CSS var.",
-        ],
-        params: [
-            "prop (required)",
-            "element (default body)"
-        ]
-    },
-    setVar: {
-        description: [
-            "🇪🇸 Actualiza el valor de la variable css.",
-            "🇬🇧 Sets the value of a CSS var."
-        ],
-        params: [
-            "prop (required)",
-            "value (required)",
-            "element (default body)"
-        ]
-    }
-})
+export const info = () => {
+    terminal.description({
+        module: "css helper",
+        items: {
+
+            getVar: {
+                type: "fn",
+                description: [
+                    "🇪🇸 Devuelve el valor de la variable css.",
+                    "🇬🇧 Gets the value of a CSS var."
+                ],
+                parameters: [
+                    "prop (required)",
+                    "element (default body)"
+                ]
+            },
+            
+            setVar: {
+                type: "fn",
+                description: [
+                    "🇪🇸 Actualiza el valor de la variable css.",
+                    "🇬🇧 Sets the value of a CSS var."
+                ],
+                parameters: [
+                    "prop (required)",
+                    "value (required)",
+                    "element (default body)"
+                ]
+            }
+        }
+    })
+}
