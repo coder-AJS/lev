@@ -8,8 +8,6 @@ export const get = async ({ mode = null, items = null } = {}) => {
     let itemsAr = items
     if (items) itemsAr = Array.isArray(items) ? items : [items]
 
-    console.log(itemsAr)
-
     const modes = {
         helpers: base + "./../config/helpers.js"
     }

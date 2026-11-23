@@ -30,30 +30,35 @@ export const sleepTempo = async (element) => {
     await sleep(getTempo(element))
 }
 
-export const info = terminal.description({
+export const info = () => terminal.description({
     module: "tempo helper",
-    type: "fn",
-    info: {
+    items: {
+
         getTempo: {
+            type: "fn",
             description: [
                 "🇪🇸 Devuelve la duracion de transicion de un elemento en ms.",
                 "🇬🇧 Return transition duration of an element in ms."
             ],
-            params: "element (required)"
+            pars: "element (required)"
         },
+
         sleep: {
+            type: "fn",
             description: [
                 "🇪🇸 Pausa la ejecucion durante X ms.",
                 "🇬🇧 Pauses execution X ms."
             ],
-            params: "ms (required)"
+            pars: "ms (required)"
         },
+
         sleepTempo: {
+            type: "fn",
             description: [
                 "🇪🇸 Pausa la ejecucion durante el tempo de la transicion de un elemento.",
                 "🇬🇧 Pauses execution based on the transition duration of an element."
             ],
-            params: "element (required)"
+            pars: "element (required)"
         }
     }
 })

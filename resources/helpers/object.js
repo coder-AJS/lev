@@ -30,14 +30,15 @@ export const realType = (item) => {
 
 export const info = () => terminal.description({
     module: "object helper",
-    type: "fn",
-    info: {
+    items: {
+
         recursive: {
+            type: "fn",
             description: [
                 "🇪🇸 Recorre recursivamente un objeto, ejecutando el callback por cada valor real.",
                 "🇬🇧 Recursively traverses an object, running the callback for each actual value."
             ],
-            params: ["object (required)", "callback (required)"]
+            pars: ["object (required)", "callback (required)"]
         }
     }
 })

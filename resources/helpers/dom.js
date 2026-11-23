@@ -54,16 +54,17 @@ export const inject = ({
 }
 
 /* info */
-export const info = terminal.description({
+export const info = () => terminal.description({
     module: "dom helper",
-    type: "fn",
-    info: {
+    items: {
+
         add: {
+            type: "fn",
             description: [
                 "🇪🇸 Devuelve el elemento sin inyectarlo en el dom.",
                 "🇬🇧 Return new element without dom injection."
             ],
-            params: {
+            pars: {
                 tag: "required",
                 id: "optional",
                 className: "optional",
@@ -71,12 +72,14 @@ export const info = terminal.description({
                 content: "optional"
             }
         },
+
         inject: {
+            type: "fn",
             description: [
                 "🇪🇸 Devuelve el elemento inyectado en su contenedor.",
                 "🇬🇧 Return the injected element into container."
             ],
-            params: {
+            pars: {
                 tag: "required",
                 parent: "default (body)",
                 id: "optional",

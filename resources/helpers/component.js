@@ -34,27 +34,31 @@ export const prepare = ({
 }
 
 /* info */
-export const info = terminal.description({
+export const info = () => terminal.description({
     module: "component helper",
-    info: {
+    items: {
+
         prepare: {
+            type: "fn",
             description: [
                 "🇪🇸 Instancia el componente y pregarga los recursos",
                 "🇬🇧 Create component instance and preload resources"
             ],
-            params: {
+            pars: {
                 module: "required",
                 logic: "required",
                 css: "optional",
                 node: "optional"
             }
         },
+
         add: {
+            type: "fn",
             description: [
                 "🇪🇸 Instancia el componente y lo inyecta en su elemento padre.",
                 "🇬🇧 Create component instance and inject on parent element."
             ],
-            params: {
+            pars: {
                 module: "required",
                 parent: "required",
                 logic: "required",

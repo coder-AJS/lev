@@ -1,192 +1,151 @@
 import { realType } from "./object.js"
 import { recursive } from "./object.js"
 
-/* export const description = ({
-    module = null,
-    items = null
-} = {}) => {
-    const modulePar = module && (typeof (module) === "string")
-    const itemPar = Array.isArray(items)
-
-    if (!modulePar || !itemPar) {
-        traceError(`${module} - invalid parameters`)
-        info()
-        return null
-    }
-
-    let error = false
-    const color = "greenyellow"
-    let sections = [`${module.toUpperCase()}\n\n--------------------------------------------------------\n\n\n`]
-
-    Object.entries(items).forEach(([name, value], index) => {
-        if (error) {
-            return
-        }
-
-        let icon
-        const type = value.type || "fn" 
-        const destructured = value.destructured || false 
-        const params = value.params || null
-        
-        type === "fn" && (icon = "🧩")
-        type === "method" && (icon = "🔗")
-
-
-        console.log(destructured)
-
-        if (type !== "fn" && type !== "method") {
-            traceError(`${module} - invalid destructured`)
-            info()
-            error = true
-        }
-
-        if (typeof destructured !== "boolean") {
-            traceError(`${module} - invalid destructured`)
-            info()
-            error = true
-        }
-
-        let colors = 1
-
-        index > 0 && (sections[0] += "\n\n")
-
-        sections[0] += `${icon} %c${value.name}%c [${type}]\n\n`
-        sections[0] += "• Description\n\n"
-        value.description.forEach(item => sections[0] += `  ${item}\n`)
-
-        if (value.params) {
-
-            sections[0] += `\n• Parameters:\n\n`
-
-            if (type === "fn") {
-                const normalized = value.params === "string" ? [value.params] : value.params
-                normalized.forEach(item => sections[0] += `  ${item}\n`)
-            }
-
-
-            if (type === "method")
-                Object.entries(value.params).forEach(([key, value]) => {
-                    sections[0] += `  ${key}:`
-                    for (let i = 0; i < 16 - key.length; i++) { sections[0] += " " }
-                    sections[0] += `${value}\n`
-                })
-        }
-
-        if (value.params && typeof value.params === "object" && !Array.isArray(value.params)) {
-            sections[0] += `\n• Destructured: %ctrue%c\n`
-            colors++
-        }
-
-        sections[0] += "\n\n--------------------------------------------------------\n\n"
-        do {
-            sections.push(`color: ${color}; font-weight: bold;`, "")
-            colors--
-        } while (colors !== 0)
-    })
-
-    console.trace(...sections, "\n")
-}
- */
-
 export const description = ({
     module = null,
     items = null
 } = {}) => {
-    let error = false
-    let output = []
-    let styles = []
-
-    const alert = (infoAlert) => {
-        traceError(`Terminal helper - ${module}: ` + infoAlert)
-        info()
-        error = true
-        return
+    /*     let styles = []
+     */
+    const icons = {
+        module: "📌",
+        fn: "🧩",
+        method: "🔗"
     }
 
-    const resetStyle = "color: inherit; font-weight: normal; font-size: 12px;"
+    const colors = {
+        module: "white",
+        fn: "greenyellow",
+        method: "orange",
+        error: "tomato"
+    }
 
     const toColor = (text, color) => {
         return {
             text: `%c${text}%c`,
-            style: [`color: ${color}; font-weight: bold; font-size: 12px;`, resetStyle]
+            style: `color: ${color}; font-weight: bold; font-size: 12px;`, resetStyle
         }
     }
+    const resetStyle = "color: inherit; font-weight: normal; font-size: 12px;"
 
-    const jumpLine = (lines) => { return "\n".repeat(lines) }
+    const addTabs = (tabs) => { return " ".repeat(tabs) }
 
     const addText = (text, jump, color) => {
         if (!color) {
-            output.push(text + "\n".repeat(jump))
+            correctOutput.push(text + "\n".repeat(jump))
             return
         }
         const textColor = toColor(text, color)
-        output.push(textColor.text + "\n".repeat(jump))
-        styles.push(...textColor.style)
+        correctOutput.push({ text: textColor.text + "\n".repeat(jump), style: textColor.style })
     }
 
-    const addMethods = (methods) => {
 
+
+    const addArrayItems = (array, tabs) => {
+        let normalized = realType(array) === "array" ? array : [array]
+        normalized.forEach(item => addText(addTabs(tabs) + "   " + item, 1))
+        addText("", 2)
     }
 
-    const isValidModule = typeof module === "string"
-    const isValidItems = items !== null && typeof items === "object"
-
-    if (!isValidModule || !isValidItems) alert("invalid parameters")
-    if (error) return
-
-    const permitedTypes = {
-        fn: "🧩"
+    const addObjectItems = (object, tabs) => {
+        Object.entries(object).forEach(([key, value]) => {
+            const size = key.length
+            addText(`${addTabs(tabs + 4)} ${key}`, 0)
+            addText(`${addTabs(20 - size)} ${value}`, 1)
+        })
+        addText("", 2)
     }
 
-    addText(module.toUpperCase(), 2, "greenyellow")
+    const addDestructured = (boolean, tabs, color) => {
+        addText(`${addTabs(tabs)} • Destructured: `, 0)
+        boolean
+            ? addText(true, 1, color)
+            : addText(false, 1, "grey")
+    }
+
+    const consoleOutput = (output, mode) => {
+        console.log(output)
+
+        output.forEach((item, index) => {
+            if (index === 0) console.groupCollapsed(item.text, item.style)
+            if (mode === "error" && index !== 0) console.trace(item.text, item.style)
+        })
+    }
+
+
+    let helperError = [toColor("TERMINAL HELPER ERROR", colors.error)]
+    if (!module) helperError.push(toColor("module parameter lost", colors.error))
+    if (!items) helperError.push(toColor("items parameter lost", colors.error))
+
+    if (helperError.length > 1) {
+        consoleOutput(helperError, "error")
+        return
+    }
+
+    let correctOutput = []
+    addText(icons.module + " " + module.toUpperCase(), 2, colors.module)
 
     Object.entries(items).forEach(([key, value]) => {
-        const type = value?.type && permitedTypes[value.type] || null
+        const type = value?.type && icons[value.type] || null
         const description = value?.description || null
-        const parameters = value?.parameters || null
+        const pars = value?.pars || null
         const methods = value?.methods || null
-        const destructured = parameters && Array.isArray(parameters) ? false : true
-
-        console.log(type, parameters, methods, destructured)
 
         if (!type) alert(`${key} - type (${value.type}) not valid`)
         if (!description) alert(`${key} - description not exist`)
         if (methods != null && realType(methods) !== "object") alert(`${key} - methods only can be an object`)
-        if (error) return
 
+        /* description */
+        addText("─".repeat(60), 3, "rgb(90, 90, 90)")
+        addText(type + " " + key, 2, colors.fn)
+        addText(`${addTabs(2)} • Description`, 2)
+        addArrayItems(description, 2)
 
-        addText(type + " " + key, 2)
-        addText("• Description", 2)
-        description.forEach(item => addText("     " + item, 1))
-        addText(jumpLine(1))
+        /* pars */
+        if (pars) {
+            const isObject = realType(pars) === "object"
+            addText(`${addTabs(2)} • Parameters`, 2)
 
-        if (parameters) {
-            addText("• Parameters", 2)
+            if (!isObject) {
+                addArrayItems(pars, 4)
+                addDestructured(false, 2)
+            }
 
-            if (!destructured) {
-                parameters.length
-                    ? parameters.forEach(item => addText(`     ${item}`, 1))
-                    : addText(`     none`, 1)
+            if (isObject) {
+                addObjectItems(pars, 2)
+                addDestructured(true, 2, colors.fn)
+            }
 
-                addText(jumpLine(1))
-            } /* falta parametros desestruturados */
         }
 
+        /* methods */
         if (methods) {
-            addMethods()
+            addText(`${addTabs(2)} • Methods`, 2)
+
+            Object.entries(methods).forEach(([key, value]) => {
+                addText(addTabs(5) + "─".repeat(60), 3, "rgb(79, 129, 123)")
+                addText(addTabs(3) + "  " + icons.method + " " + key, 2, colors.method)
+                addText(`${addTabs(5)} • Description`, 2)
+                addArrayItems(value.description, 8)
+
+                if (value.pars) {
+                    const isObject = realType(value?.pars) === "object"
+                    addText(`${addTabs(5)} • Parameters`, 2)
+                    isObject
+                        ? addObjectItems(value.pars, 5)
+                        : addArrayItems(value.pars, 7)
+                    addDestructured(isObject, 5, colors.method)
+                    addText("", 2)
+                }
+
+                if (!value.pars) addText("", 1)
+            })
         }
 
-        if (parameters?.length || (methods && Object.keys(methods).length)) {
-            addText("• destructured: ", 0)
-            destructured
-                ? addText(true, 4, "tomato")
-                : addText(false, 4, "greenyellow")
-        }
-
-
+        if (!methods) addText("", 2)
     })
 
-    !error && console.trace(output.join(""), ...styles)
+    console.trace(consoleOutput(correctOutput))
 }
 
 export const objectError = async (module, obj) => {
@@ -196,9 +155,7 @@ export const objectError = async (module, obj) => {
     const addText = (text) => {
         console.log(text)
     }
-
-/*     const { recursive } = await import("./object.js")
- */    recursive(obj, addText)
+    recursive(obj, addText)
 }
 
 const inError = () => [
@@ -222,18 +179,17 @@ export const reportError = (alert, error) => {
     console.groupEnd()
 }
 
-export const info = () => {
-    description({
-        module: "terminal helper",
-        items: {
-            description: {
-                description: [
-                    "🇪🇸 Genera documentacion en consola para modulos.",
-                    "🇬🇧 Generates console documentation for modules."
-                ],
-                type: "fn",
-                params: ["module (required)", "type (required)", "info (required)"]
-            }
+export const info = () => description({
+    module: "terminal helper",
+    items: {
+
+        description: {
+            type: "fn",
+            description: [
+                "🇪🇸 Genera documentacion en consola para modulos.",
+                "🇬🇧 Generates console documentation for modules."
+            ],
+            pars: ["module (required)", "type (required)", "info (required)"]
         }
-    })
-}
+    }
+})

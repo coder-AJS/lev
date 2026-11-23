@@ -111,15 +111,15 @@ export const info = () => terminal.description({
                 "🇪🇸 Crea un objeto auto reactivo.",
                 "🇬🇧 Create an auto reactive object."
             ],
+            
             methods: {
 
                 add: {
-                    type: "method",
                     description: [
                         "🇪🇸 Añade una nueva prop reactiva con listeners opcionales.",
                         "🇬🇧 Adds a new reactive property with optional listeners."
                     ],
-                    params: {
+                    pars: {
                         name: "required",
                         value: "required",
                         listeners: "optional"
@@ -127,24 +127,22 @@ export const info = () => terminal.description({
                 },
 
                 addTo: {
-                    type: "method",
                     description: [
                         "🇪🇸 Añade nuevos listeners a una prop reactiva existente.",
                         "🇬🇧 Adds new listeners to an existing reactive property."
                     ],
-                    params: {
+                    pars: {
                         name: "required",
                         listeners: "required"
                     }
                 },
 
                 remove: {
-                    type: "method",
                     description: [
                         "🇪🇸 Elimina listeners especificos o todos los listeners de una prop.",
                         "🇬🇧 Removes specific listeners or clears all listeners for a property."
                     ],
-                    params: {
+                    pars: {
                         name: "required",
                         listeners: "optional",
                         all: "default (false)"
@@ -152,7 +150,6 @@ export const info = () => terminal.description({
                 },
 
                 props: {
-                    type: "method",
                     description: [
                         "🇪🇸 Devuelve solo las props reactivas en un objeto plano.",
                         "🇬🇧 Returns a plain object containing the reactive data properties."
@@ -160,16 +157,14 @@ export const info = () => terminal.description({
                 },
 
                 listeners: {
-                    type: "method",
                     description: [
                         "🇪🇸 Devuelve los listeners de una o de todas las props.",
                         "🇬🇧 Retrieves listeners for a specific property or for all properties."
                     ],
-                    params: "prop (optional)"
+                    pars: "prop (optional)"
                 },
 
                 destroy: {
-                    type: "method",
                     description: [
                         "🇪🇸 Elimina la instancia reactiva y limpia los objetos.",
                         "🇬🇧 Remove reactive instance and cleanUp all."

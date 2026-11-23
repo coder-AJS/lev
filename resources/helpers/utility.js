@@ -9,16 +9,17 @@ export const randomize = ({
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export const info = terminal.description({
+export const info = () => terminal.description({
     module: "utility helper",
-    type: "fn",
-    info: {
+    items: {
+
         randomize: {
+            type: "fn",
             description: [
                 "🇪🇸 Devuelve un numero entero entre min y max.",
                 "🇬🇧 Return a random integer between min and max."
             ],
-            params: {
+            pars: {
                 min: "required",
                 max: "required"
             }
