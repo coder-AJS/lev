@@ -14,29 +14,29 @@ export const description = ({
     }
 
     const colors = {
-        module: "white",
-        fn: "greenyellow",
-        method: "orange",
-        error: "tomato"
+        module: "color: white; font-weight: bold; font-size: 12px;",
+        fn: "color: greenyellow; font-weight: bold; font-size: 12px;",
+        method: "color: orange; font-weight: bold; font-size: 12px;",
+        errorTitle: "color: tomato; font-size: 12px; font-weight: bold;",
+        error: "color: greenyellow; font-size: 12px;",
     }
 
     const toColor = (text, color) => {
         return {
             text: `%c${text}%c`,
-            style: `color: ${color}; font-weight: bold; font-size: 12px;`, resetStyle
+            style: color
         }
     }
-    const resetStyle = "color: inherit; font-weight: normal; font-size: 12px;"
 
     const addTabs = (tabs) => { return " ".repeat(tabs) }
 
-    const addText = (text, jump, color) => {
+    const addText = (obj, text, jump, color) => {
         if (!color) {
-            correctOutput.push(text + "\n".repeat(jump))
+            obj.push(text + "\n".repeat(jump))
             return
         }
         const textColor = toColor(text, color)
-        correctOutput.push({ text: textColor.text + "\n".repeat(jump), style: textColor.style })
+        obj.push({ text: textColor.text + "\n".repeat(jump), style: textColor.style })
     }
 
 
@@ -67,26 +67,52 @@ export const description = ({
         console.log(output)
 
         output.forEach((item, index) => {
-            if (index === 0) console.groupCollapsed(item.text, item.style)
-            if (mode === "error" && index !== 0) console.trace(item.text, item.style)
+            if (index === 0) console.groupCollapsed(item.text, item.style, "")
+            if (mode === "error" && index !== 0) console.trace(item.text, item.style, "")
         })
     }
 
 
-    let helperError = [toColor("TERMINAL HELPER ERROR", colors.error)]
-    if (!module) helperError.push(toColor("module parameter lost", colors.error))
-    if (!items) helperError.push(toColor("items parameter lost", colors.error))
+    let errorReg = []
+    addText(errorReg, "TERMINAL HELPER ERROR", 1, colors.errorTitle)
 
-    if (helperError.length > 1) {
-        consoleOutput(helperError, "error")
-        return
+    const primaryValidation = () => {
+        if (!module || realType(module) !== "string") addText(errorReg, "module parameter lost", 1, colors.error)
+        if (!items || realType(items) !== "object") addText(errorReg, "items parameter lost", 1, colors.error)
     }
 
+    const validateItem = (ar) => {
+        const itemsType = ["fn", "method"]
+        const descriptionType = ["string", "array"]
+        const parsType = ["string", "array", "object"]
+        const methodsType = ["object"]
+
+        const isValidtype = itemsType.includes(ar.type)
+        if (!ar.type) { addText(errorReg, "type required parameter", 1, colors.error) }
+        if (ar.type && !isValidtype) { addText(errorReg, `type invalid parameter`, 1, colors.error) }
+
+        const isValidDescription = descriptionType.includes(realType(ar.description))
+        if (!ar.description) addText(errorReg, "descriptionr required paramameter", 1, colors.error)
+        if (ar.description && !isValidDescription) addText(errorReg, "description invalid parameter", colors.error) 
+
+        const isValidPars = parsType.includes(realType(ar.pars))
+        if (ar.pars && !isValidPars) addText(errorReg, "pars invalid parameter", 1, colors.error)
+
+        const isValidMethods = methodsType.includes(realType(ar.methods))
+        if (ar.methods && !isValidMethods) addText(errorReg, "methods invalid parameter", 1, colors.error)
+    }
+
+    primaryValidation()
+    if (errorReg.length > 1) return consoleOutput(errorReg, "error")
+
     let correctOutput = []
-    addText(icons.module + " " + module.toUpperCase(), 2, colors.module)
+    addText(correctOutput, icons.module + " " + module.toUpperCase(), 2, colors.module)
 
     Object.entries(items).forEach(([key, value]) => {
-        const type = value?.type && icons[value.type] || null
+        validateItem(value)
+
+
+/*         const type = value?.type && icons[value.type] || null
         const description = value?.description || null
         const pars = value?.pars || null
         const methods = value?.methods || null
@@ -94,15 +120,15 @@ export const description = ({
         if (!type) alert(`${key} - type (${value.type}) not valid`)
         if (!description) alert(`${key} - description not exist`)
         if (methods != null && realType(methods) !== "object") alert(`${key} - methods only can be an object`)
-
+ */
         /* description */
-        addText("─".repeat(60), 3, "rgb(90, 90, 90)")
+/*         addText("─".repeat(60), 3, "rgb(90, 90, 90)")
         addText(type + " " + key, 2, colors.fn)
         addText(`${addTabs(2)} • Description`, 2)
         addArrayItems(description, 2)
 
-        /* pars */
-        if (pars) {
+ */        /* pars */
+/*         if (pars) {
             const isObject = realType(pars) === "object"
             addText(`${addTabs(2)} • Parameters`, 2)
 
@@ -117,9 +143,9 @@ export const description = ({
             }
 
         }
-
+ */
         /* methods */
-        if (methods) {
+/*         if (methods) {
             addText(`${addTabs(2)} • Methods`, 2)
 
             Object.entries(methods).forEach(([key, value]) => {
@@ -143,9 +169,11 @@ export const description = ({
         }
 
         if (!methods) addText("", 2)
-    })
+ */    })
 
-    console.trace(consoleOutput(correctOutput))
+    errorReg.length > 1
+        ? consoleOutput(errorReg, "error")
+        : console.trace(consoleOutput(correctOutput))
 }
 
 export const objectError = async (module, obj) => {

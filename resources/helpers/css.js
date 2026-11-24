@@ -26,32 +26,32 @@ export const setVar = (prop, value, element) => {
 }
 
 export const info = () => terminal.description({
-    modules: "css helper",
-    itemssd: {
+        module: "css helper",
+        items: {
 
-        getVar: {
-            type: "fn",
-            description: [
-                "🇪🇸 Devuelve el valor de la variable css.",
-                "🇬🇧 Gets the value of a CSS var."
-            ],
-            pars: [
-                "prop (required)",
-                "element (default body)"
-            ]
-        },
-
-        setVar: {
-            type: "fn",
-            description: [
-                "🇪🇸 Actualiza el valor de la variable css.",
-                "🇬🇧 Sets the value of a CSS var."
-            ],
-            pars: [
-                "prop (required)",
-                "value (required)",
-                "element (default body)"
-            ]
+            getVar: {
+                type: "fnd",
+                description: [
+                    "🇪🇸 Devuelve el valor de la variable css.",
+                    "🇬🇧 Gets the value of a CSS var."
+                ],
+                pars: [
+                    "prop (required)",
+                    "element (default body)"
+                ]
+            },
+            
+            setVar: {
+                type: "fn",
+                description: [
+                    "🇪🇸 Actualiza el valor de la variable css.",
+                    "🇬🇧 Sets the value of a CSS var."
+                ],
+                pars: [
+                    "prop (required)",
+                    "value (required)",
+                    "element (default body)"
+                ]
+            }
         }
-    }
-})
+    })
