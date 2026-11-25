@@ -10,6 +10,8 @@ const init = async () => {
     ])
 
     helpers.css.info()
+    helpers.component.info()
+    helpers.reactive.info()
 }
 
 init()

@@ -30,7 +30,7 @@ export const info = () => terminal.description({
         items: {
 
             getVar: {
-                type: "fnd",
+                type: "fn",
                 description: [
                     "🇪🇸 Devuelve el valor de la variable css.",
                     "🇬🇧 Gets the value of a CSS var."
