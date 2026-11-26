@@ -1,5 +1,4 @@
-import { realType } from "./object.js"
-import { recursive } from "./object.js"
+import { realType, recursive } from "./object.js"
 
 export const description = ({
     module = null,
@@ -17,58 +16,80 @@ export const description = ({
     }
 
     const colors = {
-        limeBold: "color: greenyellow; font-weight: bold; font-size: 12px;",
-        orangeBold: "color: orange; font-weight: bold; font-size: 12px;",
+        limeBold: "color: greenyellow; font-size: 12px; font-weight: bold; ",
+        lime: "color: greenyellow; font-size: 12px;",
+        orange: "color: orange; font-size: 12px;",
         errorTitle: "color: tomato; font-size: 12px; font-weight: bold;",
-        error: "color: greenyellow; font-size: 12px;",
+        error: "color: tomato; font-size: 12px;",
         greyLight: "color: rgb(60, 60, 60);",
         greyNormal: "color: grey;"
     }
 
-    const addTabs = (tabs) => { return " ".repeat(tabs) }
+    const addTabs = (tabs) => { return " ".repeat(Math.max(0, tabs)) }
+    const addLine = (regPar, length, tabs = 0) => { addText(regPar, `${addTabs(tabs)} ${"─".repeat(length)}`, 0, 1, colors.greyLight) }
 
     const selectReg = (par) => {
-        if (par === "E") return { text: errorText, style: errorStyle }
-        if (par === "I") return { text: infoText, style: infoStyle }
+        if (par === "error") return { text: errorText, style: errorStyle }
+        if (par === "info") return { text: infoText, style: infoStyle }
     }
 
-    const addText = (regPar, text, newLine, color = null) => {
+    const addText = (regPar, text, tabs, newLine, color) => {
         const reg = selectReg(regPar)
         const lines = "\n".repeat(newLine)
-
-        reg.text.push(`%c${text}%c${lines}`)
+        reg.text.push(`${addTabs(tabs)}%c${text}%c${lines}`)
         reg.style.push(color ?? "", "")
     }
 
-    const addTitle = ({ regPar, title, tabs, newLines }) => {
-        addText(regPar, `${addTabs(tabs)} ${title}`, newLines, colors.limeBold)
-    }
-
-    const addLine = (regPar, length, tabs = 0) => { addText(regPar, `${addTabs(tabs)} ${"─".repeat(length)}`, 1, colors.greyLight) }
-
-    const addArray = (infoReg, array, tabs) => {
+    const addArray = (parReg, array, tabs) => {
         let normalized = realType(array) === "array" ? array : [array]
-        normalized.forEach(item => addText(infoReg, `${addTabs(tabs)}   ${item}`, 1))
+        normalized.forEach(item => addText(parReg, `${addTabs(tabs + 1)} ${item}`, 0, 1))
     }
 
     const addObject = (regPar, object, tabs) => {
         Object.entries(object).forEach(([key, value]) => {
             const size = key.length
-            addText(regPar, `${addTabs(tabs + 2)} ${key}`, 0)
-            addText(regPar, `${addTabs(20 - size)} ${value}`, 1)
+            addText(regPar, `${addTabs(tabs + 1)} ${key}`, 0, 0)
+            addText(regPar, `${addTabs(20 - size)} ${value}`, 0, 1)
         })
     }
 
-    const addDestructured = (regPar, boolean, tabs, color) => {
-        addText(regPar, `${addTabs(tabs)} • Destructured: `, 0)
-        boolean
-            ? addText(regPar, true, 1, colors.limeBold)
-            : addText(regPar, false, 1, colors.greyNormal)
+    /* sections */
+    const addName = (name, color) => {
+        addText("info", "", 0, 2)
+        addText("info", name, 0, 0, color)
+        addText("info", " ()", 0, 2, colors.greyNormal)
     }
 
+    const addDescription = (description, tabs) => {
+        addText("info", "• Description", tabs, 2)
+        addArray("info", description, tabs + 2)
+        addText("info", "", 0, 2)
+    }
+
+    const addPars = (pars, tabs) => {
+        addText("info", "• Parameters", tabs, 2)
+        const parsType = realType(pars)
+        if (parsType === "array" || parsType === "string") addArray("info", pars, tabs + 2)
+        if (parsType === "object") addObject("info", pars, tabs + 2)
+        addText("info", "", 0, 2)
+
+        addDestructured("info", tabs, 3, parsType === "object")
+    }
+
+    const addDestructured = (regPar, tabs, lines, boolean) => {
+        addText(regPar, `${addTabs(tabs)}• Destructured:`, 0, 0)
+        boolean
+            ? addText(regPar, true, 1, lines, colors.limeBold)
+            : addText(regPar, false, 1, lines, colors.greyNormal)
+    }
+
+    /* output */
     const consoleOutput = (mode, reg, style) => {
         console.groupCollapsed(reg[0], style[0], style[1])
-        if (mode === "error") reg.forEach((item, index) => index !== 0 && console.trace(item, style[index + 1], style[index + 2]))
+        if (mode === "error") {
+            reg.forEach((item, index) => index !== 0 && console.log(item, style[index * 2], style[index * 2 + 1]))
+            console.trace()
+        }
 
         if (mode === "info") {
             const listReg = reg.slice(1).join("")
@@ -78,10 +99,11 @@ export const description = ({
         console.groupEnd()
     }
 
+    /* validations */
     const primaryValidation = () => {
-        addText("E", "TERMINAL HELPER ERROR", 1, colors.errorTitle)
-        if (!module || realType(module) !== "string") addText("E", "module parameter lost", 1, colors.error)
-        if (!items || realType(items) !== "object") addText("E", "items parameter lost", 1, colors.error)
+        addText("error", "TERMINAL HELPER ERROR", 0, 1, colors.errorTitle)
+        if (!module || realType(module) !== "string") addText("error", "module parameter lost", 0, 1, colors.error)
+        if (!items || realType(items) !== "object") addText("error", "items parameter lost", 0, 1, colors.error)
     }
 
     const validateTree = (ar) => {
@@ -91,138 +113,58 @@ export const description = ({
         const methodsType = ["object"]
 
         const isValidtype = itemsType.includes(ar.type)
-        if (!ar.type) { addText("E", "type required parameter", 1, colors.error) }
-        if (ar.type && !isValidtype) { addText("E", `type invalid parameter`, 1, colors.error) }
+        if (!ar.type) { addText("error", "type required parameter", 0, 1, colors.error) }
+        if (ar.type && !isValidtype) { addText("error", `type invalid parameter`, 0, 1, colors.error) }
 
         const isValidDescription = descriptionType.includes(realType(ar.description))
-        if (!ar.description) addText("E", "descriptionr required paramameter", 1, colors.error)
-        if (ar.description && !isValidDescription) addText("E", "description invalid parameter", colors.error)
+        if (!ar.description) addText("error", "description required paramameter", 0, 1, colors.error)
+        if (ar.description && !isValidDescription) addText("error", "description invalid parameter", 0, 1, colors.error)
 
         const isValidPars = parsType.includes(realType(ar.pars))
-        if (ar.pars && !isValidPars) addText("E", "pars invalid parameter", 1, colors.error)
+        if (ar.pars && !isValidPars) addText("error", "pars invalid parameter", 0, 1, colors.error)
 
         const isValidMethods = methodsType.includes(realType(ar.methods))
-        if (ar.methods && !isValidMethods) addText("E", "methods invalid parameter", 1, colors.error)
+        if (ar.methods && !isValidMethods) addText("error", "methods invalid parameter", 0, 1, colors.error)
+    }
+
+    /* generate */
+    const generateInfo = (par) => {
+        Object.entries(par).forEach(([name, items], index) => {
+            validateTree(items)
+            index > 0 && addLine("info", 60)
+
+            /* name */
+            addName(`${icons[items.type]} ${name}`, colors.lime)
+
+            /* description */
+            addDescription(items.description, 4)
+
+            /* params */
+            if (items.pars) addPars(items.pars, 4)
+
+            /* methods */
+            if (items.methods) {
+                addText("info", "• Methods", 4, 0)
+                Object.entries(items.methods).forEach(([name, item], index) => {
+                    index > 0 && addLine("info", 56, 4)
+                    addName(`${addTabs(4)} ${icons.method} ${name}`, colors.orange)
+                    addDescription(item.description, 10)
+                    item.pars && addPars(item.pars, 10)
+                })
+            }
+        })
+
+        errorText.length > 1
+            ? consoleOutput("error", errorText, errorStyle)
+            : consoleOutput("info", infoText, infoStyle)
     }
 
     primaryValidation()
     if (errorText.length > 1) return consoleOutput("error", errorText, errorStyle)
 
-    addTitle({ regPar: "I", title: `${icons.module} ${module.toUpperCase()}`, tabs: 0, lines: 0 })
-
-    Object.entries(items).forEach(([key, value], index) => {
-        validateTree(value)
-
-        /* title */
-        if (index > 0) addLine("I", 60)
-        addText("I", "", 2)
-        const icon = icons[value.type]
-        addTitle({ regPar: "I", title: `${icon} ${key.toUpperCase()}`, tabs: 0, lines: 0 })
-        addText("I", ` ()`, 2, colors.greyNormal)
-
-        /* description */
-        addText("I", "    • Description", 2)
-        addArray("I", value.description, 3)
-        addText("I", "", 2)
-
-        /* params */
-        if (value.pars) {
-            addText("I", "    • Parameters", 2)
-            const parsType = realType(value.pars)
-            if (parsType === "array" || parsType === "string") addArray("I", value.pars, 3)
-            if (parsType === "object") {
-                addObject("I", value.pars, 3)
-            }
-            addText("I", "", 2)
-
-            /* destructured */
-            addDestructured("I", parsType === "object", 3,)
-            addText("I", "", 2)
-        }
-
-        /* methods */
-        if (value.methods) {
-            addText("I", "    • Methods", 2)
-            Object.entries(value.methods).forEach((item, index) => {
-                const title = item[0]
-                const pars = item[1]
-
-                if (index !== 0) {
-                    addLine("I", 56, 4)
-                    addText("I", "", 2)
-                }
-
-                addText("I", `${addTabs(4)} ${icons.method} ${title}`, 2, colors.orangeBold)
-                Object.entries(pars).forEach(([key, value]) => {
-                    console.log(key, value)
-                })
-                addText("I", "", 2)
-
-            })
-        }
-
-        /*         const type = value?.type && icons[value.type] || null
-        const description = value?.description || null
-        const pars = value?.pars || null
-        const methods = value?.methods || null
-
-        if (!type) alert(`${key} - type (${value.type}) not valid`)
-        if (!description) alert(`${key} - description not exist`)
-        if (methods != null && realType(methods) !== "object") alert(`${key} - methods only can be an object`)
- */
-        /* description */
-/*         addText("─".repeat(60), 3, "rgb(90, 90, 90)")
-        addText(type + " " + key, 2, colors.fn)
-        addText(`${addTabs(2)} • Description`, 2)
-        addaddArray(description, 2)
-
- */        /* pars */
-/*         if (pars) {
-            const isObject = realType(pars) === "object"
-            addText(`${addTabs(2)} • Parameters`, 2)
-
-            if (!isObject) {
-                addaddArray(pars, 4)
-                addDestructured(false, 2)
-            }
-
-            if (isObject) {
-                addObjectItems(pars, 2)
-                addDestructured(true, 2, colors.fn)
-            }
-
-        }
- */
-        /* methods */
-/*         if (methods) {
-            addText(`${addTabs(2)} • Methods`, 2)
-
-            Object.entries(methods).forEach(([key, value]) => {
-                addText(addTabs(5) + "─".repeat(60), 3, "rgb(79, 129, 123)")
-                addText(addTabs(3) + "  " + icons.method + " " + key, 2, colors.method)
-                addText(`${addTabs(5)} • Description`, 2)
-                addaddArray(value.description, 8)
-
-                if (value.pars) {
-                    const isObject = realType(value?.pars) === "object"
-                    addText(`${addTabs(5)} • Parameters`, 2)
-                    isObject
-                        ? addObjectItems(value.pars, 5)
-                        : addaddArray(value.pars, 7)
-                    addDestructured(isObject, 5, colors.method)
-                    addText("", 2)
-                }
-
-                if (!value.pars) addText("", 1)
-            })
-        }
-
-        if (!methods) addText("", 2)
- */    })
-
-    errorText.length > 1
-        ? consoleOutput("error", errorText, errorStyle)
-        : consoleOutput("info", infoText, infoStyle)
+    /* gererate info */
+    addText("info", `${icons.module} ${module.toUpperCase()}`, 0, 0, colors.limeBold)
+    generateInfo(items)
 }
 
 export const objectError = async (module, obj) => {
